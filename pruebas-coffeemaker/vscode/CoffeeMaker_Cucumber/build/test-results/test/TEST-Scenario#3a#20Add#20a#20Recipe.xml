@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Scenario: Add a Recipe" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-03T21:53:58" hostname="LuisFelipe-PC" time="0.004">
+  <properties/>
+  <testcase name="Given an empty recipe book" classname="Scenario: Add a Recipe" time="0.0"/>
+  <testcase name="When I add a valid recipe through the interface" classname="Scenario: Add a Recipe" time="0.001"/>
+  <testcase name="Then the recipe is stored and the interface waits" classname="Scenario: Add a Recipe" time="0.0"/>
+  <testcase name="classMethod" classname="Scenario: Add a Recipe" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo %}Suites de {{ proyecto.nombre }}{% endblock %}
+{% block contenido %}
+<p><a href="/proyectos">&larr; Proyectos</a></p>
+<section class="cabecera-seccion">
+    <h1>Suites &mdash; {{ proyecto.nombre }}</h1>
+    <div class="acciones">
+        <a href="/proyectos/{{ proyecto._id }}/dashboard">Dashboard</a>
+        <a href="/proyectos/{{ proyecto._id }}/defectos">Defectos</a>
+        <a class="boton" href="/proyectos/{{ proyecto._id }}/suites/nueva">+ Nueva suite</a>
+    </div>
+</section>
+
+{% if suites %}
+<table class="tabla">
+    <thead>
+        <tr><th>Nombre</th><th>Descripcion</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for suite in suites %}
+        <tr>
+            <td><a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos">{{ suite.nombre }}</a></td>
+            <td>{{ suite.descripcion }}</td>
+            <td class="acciones">
+                <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/editar">Editar</a>
+                <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos">Ver casos</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Todavia no hay suites en este proyecto. <a href="/proyectos/{{ proyecto._id }}/suites/nueva">Crea la primera</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Scenario: Add Inventory" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-03T21:53:58" hostname="LuisFelipe-PC" time="0.002">
+  <properties/>
+  <testcase name="Given a default recipe book" classname="Scenario: Add Inventory" time="0.0"/>
+  <testcase name="When I add valid inventory and request the inventory report" classname="Scenario: Add Inventory" time="0.0"/>
+  <testcase name="Then the inventory report contains the added amounts" classname="Scenario: Add Inventory" time="0.0"/>
+  <testcase name="classMethod" classname="Scenario: Add Inventory" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

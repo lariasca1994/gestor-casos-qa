@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo %}Defectos de {{ proyecto.nombre }}{% endblock %}
+{% block contenido %}
+<p><a href="/proyectos/{{ proyecto._id }}/suites">&larr; Suites de {{ proyecto.nombre }}</a></p>
+<h1>Defectos &mdash; {{ proyecto.nombre }}</h1>
+
+{% if defectos %}
+<table class="tabla">
+    <thead>
+        <tr><th>Titulo</th><th>Severidad</th><th>Estado</th><th>Reportado</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for defecto in defectos %}
+        <tr>
+            <td>{{ defecto.titulo }}</td>
+            <td><span class="severidad severidad-{{ defecto.severidad|lower }}">{{ defecto.severidad }}</span></td>
+            <td>{{ defecto.estado }}</td>
+            <td>{{ defecto.fecha_creacion.strftime("%Y-%m-%d") }}</td>
+            <td class="acciones">
+                <form method="post" action="/proyectos/{{ proyecto._id }}/defectos/{{ defecto._id }}/estado" class="en-linea formulario-estado">
+                    <select name="estado" onchange="this.form.submit()">
+                        {% for opcion in ["Abierto", "En progreso", "Cerrado"] %}
+                        <option value="{{ opcion }}" {{ "selected" if defecto.estado == opcion else "" }}>{{ opcion }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Todavia no hay defectos reportados en este proyecto.</p>
+{% endif %}
+{% endblock %}

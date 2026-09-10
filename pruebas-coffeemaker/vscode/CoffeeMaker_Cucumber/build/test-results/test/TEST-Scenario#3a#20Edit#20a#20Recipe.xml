@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Scenario: Edit a Recipe" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-03T21:53:58" hostname="LuisFelipe-PC" time="0.002">
+  <properties/>
+  <testcase name="Given a default recipe book" classname="Scenario: Edit a Recipe" time="0.0"/>
+  <testcase name="When I edit an existing recipe and select an invalid recipe" classname="Scenario: Edit a Recipe" time="0.0"/>
+  <testcase name="Then editing preserves the recipe name and rejects the invalid selection" classname="Scenario: Edit a Recipe" time="0.001"/>
+  <testcase name="classMethod" classname="Scenario: Edit a Recipe" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

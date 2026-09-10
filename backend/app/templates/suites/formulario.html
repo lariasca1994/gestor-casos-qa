@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}{{ "Editar suite" if suite else "Nueva suite" }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta-formulario">
+    <h1>{{ "Editar suite" if suite else "Nueva suite" }}</h1>
+    <p class="texto-suave">Proyecto: {{ proyecto.nombre }}</p>
+    {% if error %}<p class="aviso error">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ '/proyectos/' + proyecto._id|string + '/suites/' + suite._id|string + '/editar' if suite else '/proyectos/' + proyecto._id|string + '/suites/nueva' }}">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required autofocus
+               value="{{ suite.nombre if suite else '' }}">
+
+        <label for="descripcion">Descripcion</label>
+        <textarea id="descripcion" name="descripcion" rows="3">{{ suite.descripcion if suite else '' }}</textarea>
+
+        <button type="submit" class="boton">Guardar</button>
+    </form>
+    <p><a href="/proyectos/{{ proyecto._id }}/suites">Volver a Suites</a></p>
+</section>
+{% endblock %}

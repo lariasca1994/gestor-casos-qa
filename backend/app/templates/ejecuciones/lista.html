@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Ejecutar {{ caso.titulo }}{% endblock %}
+{% block contenido %}
+<p><a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos">&larr; Casos de {{ suite.nombre }}</a></p>
+
+<section class="tarjeta-formulario tarjeta-formulario-ancha">
+    <h1>{{ caso.titulo }}</h1>
+    <p class="texto-suave">{{ proyecto.nombre }} &rsaquo; {{ suite.nombre }} &rsaquo; prioridad {{ caso.prioridad }}</p>
+
+    {% if caso.pasos %}
+    <h3>Pasos</h3>
+    <ol>
+        {% for paso in caso.pasos %}
+        <li>{{ paso }}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+    <h3>Resultado esperado</h3>
+    <p>{{ caso.resultado_esperado }}</p>
+
+    <h3>Registrar ejecución</h3>
+    <form method="post" action="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/ejecuciones">
+        <label for="resultado">Resultado</label>
+        <select id="resultado" name="resultado" required>
+            <option value="Passed">Passed</option>
+            <option value="Failed">Failed</option>
+            <option value="Blocked">Blocked</option>
+            <option value="Skipped">Skipped</option>
+        </select>
+
+        <label for="comentario">Comentario (opcional)</label>
+        <textarea id="comentario" name="comentario" rows="3"></textarea>
+
+        <button type="submit" class="boton">Registrar</button>
+    </form>
+</section>
+
+<section>
+    <h2>Historial</h2>
+    {% if historial %}
+    <table class="tabla">
+        <thead>
+            <tr><th>Resultado</th><th>Comentario</th><th>Ejecutado por</th><th>Fecha</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for ejecucion in historial %}
+            <tr>
+                <td><span class="resultado resultado-{{ ejecucion.resultado|lower }}">{{ ejecucion.resultado }}</span></td>
+                <td>{{ ejecucion.comentario }}</td>
+                <td>{{ ejecucion.ejecutado_por_nombre }}</td>
+                <td>{{ ejecucion.fecha.strftime("%Y-%m-%d %H:%M") }}</td>
+                <td>
+                    {% if ejecucion.resultado in ["Failed", "Blocked"] %}
+                    <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/ejecuciones/{{ ejecucion._id }}/defecto/nuevo">Reportar defecto</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Todavia no se ha ejecutado este caso.</p>
+    {% endif %}
+</section>
+{% endblock %}

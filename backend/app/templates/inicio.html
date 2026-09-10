@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Gestor de Casos de Prueba QA{% endblock %}
+{% block contenido %}
+<section class="hero">
+    <h1>Gestor de Casos de Prueba QA</h1>
+    <p>
+        Una herramienta para equipos de QA: organiza proyectos, suites y casos
+        de prueba, registra ejecuciones con su resultado, vincula defectos y
+        mide cobertura &mdash; todo en un solo lugar, sin depender de una
+        hoja de calculo.
+    </p>
+    <div class="insignias">
+        <span class="insignia">FastAPI</span>
+        <span class="insignia">MongoDB</span>
+        <span class="insignia">Jinja2</span>
+        <span class="insignia">HTMX</span>
+    </div>
+    <div class="cta">
+        {% if usuario %}
+            <a class="boton" href="/proyectos">Ir a Proyectos</a>
+        {% else %}
+            <a class="boton" href="/registro">Crear cuenta</a>
+            <a class="boton boton-secundario" href="/login">Ya tengo cuenta</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="caracteristicas">
+    <div class="tarjeta">
+        <h3>Proyectos y suites</h3>
+        <p>Organiza el trabajo de prueba por proyecto y agrupa los casos en suites tematicas.</p>
+    </div>
+    <div class="tarjeta">
+        <h3>Casos de prueba</h3>
+        <p>Pasos, resultado esperado y prioridad &mdash; la base que despues consume la automatizacion.</p>
+    </div>
+    <div class="tarjeta">
+        <h3>Ejecuciones y defectos</h3>
+        <p>Cada corrida queda registrada con su resultado; lo que falla se puede convertir en un defecto con severidad y estado.</p>
+    </div>
+    <div class="tarjeta">
+        <h3>Cobertura en vivo</h3>
+        <p>Un panel muestra que porcentaje de los casos ya se ejecuto y como vienen los resultados por proyecto.</p>
+    </div>
+</section>
+{% endblock %}

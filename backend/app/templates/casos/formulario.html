@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}{{ "Editar caso" if caso else "Nuevo caso" }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta-formulario tarjeta-formulario-ancha">
+    <h1>{{ "Editar caso de prueba" if caso else "Nuevo caso de prueba" }}</h1>
+    <p class="texto-suave">{{ proyecto.nombre }} &rsaquo; {{ suite.nombre }}</p>
+    {% if error %}<p class="aviso error">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ '/proyectos/' + proyecto._id|string + '/suites/' + suite._id|string + '/casos/' + caso._id|string + '/editar' if caso else '/proyectos/' + proyecto._id|string + '/suites/' + suite._id|string + '/casos/nuevo' }}">
+        <label for="titulo">Titulo</label>
+        <input type="text" id="titulo" name="titulo" required autofocus
+               value="{{ caso.titulo if caso else '' }}">
+
+        <label for="pasos">Pasos (uno por linea)</label>
+        <textarea id="pasos" name="pasos" rows="6">{{ pasos_texto }}</textarea>
+
+        <label for="resultado_esperado">Resultado esperado</label>
+        <textarea id="resultado_esperado" name="resultado_esperado" rows="3">{{ caso.resultado_esperado if caso else '' }}</textarea>
+
+        <label for="prioridad">Prioridad</label>
+        <select id="prioridad" name="prioridad">
+            {% for opcion in ["Alta", "Media", "Baja"] %}
+            <option value="{{ opcion }}" {{ "selected" if caso and caso.prioridad == opcion else ("selected" if not caso and opcion == "Media" else "") }}>{{ opcion }}</option>
+            {% endfor %}
+        </select>
+
+        {% if caso %}
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado">
+            {% for opcion in ["Activo", "Obsoleto"] %}
+            <option value="{{ opcion }}" {{ "selected" if caso.estado == opcion else "" }}>{{ opcion }}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        <button type="submit" class="boton">Guardar</button>
+    </form>
+    <p><a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos">Volver a Casos</a></p>
+</section>
+{% endblock %}

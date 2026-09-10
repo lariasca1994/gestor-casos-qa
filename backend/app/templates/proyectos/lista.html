@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Proyectos{% endblock %}
+{% block contenido %}
+<section class="cabecera-seccion">
+    <h1>Proyectos</h1>
+    <a class="boton" href="/proyectos/nuevo">+ Nuevo proyecto</a>
+</section>
+
+{% if proyectos %}
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            {% if mostrar_dueno %}<th>Dueño</th>{% endif %}
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for proyecto in proyectos %}
+        <tr>
+            <td><a href="/proyectos/{{ proyecto._id }}/suites">{{ proyecto.nombre }}</a></td>
+            <td>{{ proyecto.descripcion }}</td>
+            {% if mostrar_dueno %}<td>{{ proyecto.creado_por_nombre }}</td>{% endif %}
+            <td class="acciones">
+                <a href="/proyectos/{{ proyecto._id }}/suites">Ver suites</a>
+                <a href="/proyectos/{{ proyecto._id }}/editar">Editar</a>
+                {% if usuario.rol == "ADMIN" %}
+                <form method="post" action="/proyectos/{{ proyecto._id }}/archivar" class="en-linea">
+                    <button type="submit" class="enlace-boton">Archivar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Todavia no hay proyectos. <a href="/proyectos/nuevo">Crea el primero</a>.</p>
+{% endif %}
+{% endblock %}

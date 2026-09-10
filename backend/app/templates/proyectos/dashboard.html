@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard de {{ proyecto.nombre }}{% endblock %}
+{% block contenido %}
+<p><a href="/proyectos/{{ proyecto._id }}/suites">&larr; Suites de {{ proyecto.nombre }}</a></p>
+<section class="cabecera-seccion">
+    <h1>Dashboard &mdash; {{ proyecto.nombre }}</h1>
+    <a href="/proyectos/{{ proyecto._id }}/defectos">Ver defectos</a>
+</section>
+
+<section class="tarjeta">
+    <h3>Cobertura de ejecucion</h3>
+    <p class="texto-suave">{{ total_ejecutados }} de {{ total_casos }} casos ejecutados al menos una vez</p>
+    <div class="barra-progreso">
+        <div class="barra-progreso-relleno" style="width: {{ cobertura_total }}%"></div>
+    </div>
+    <p><strong>{{ cobertura_total }}%</strong></p>
+</section>
+
+<section class="tarjeta" style="margin-top: 1.5rem;">
+    <h3>Resultados (ultima ejecucion por caso)</h3>
+    <div class="insignias" style="justify-content: flex-start;">
+        {% for clave, total in conteo_resultados.items() %}
+        <span class="resultado resultado-{{ clave|lower|replace(' ', '-') }}">{{ clave }}: {{ total }}</span>
+        {% endfor %}
+    </div>
+</section>
+
+<section style="margin-top: 1.5rem;">
+    <h3>Cobertura por suite</h3>
+    {% if filas_suites %}
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Suite</th><th>Casos</th><th>Ejecutados</th><th>Cobertura</th>
+                <th>Passed</th><th>Failed</th><th>Blocked</th><th>Skipped</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in filas_suites %}
+            <tr>
+                <td>{{ fila.nombre }}</td>
+                <td>{{ fila.total }}</td>
+                <td>{{ fila.ejecutados }}</td>
+                <td>{{ fila.cobertura }}%</td>
+                <td>{{ fila.resultados["Passed"] }}</td>
+                <td>{{ fila.resultados["Failed"] }}</td>
+                <td>{{ fila.resultados["Blocked"] }}</td>
+                <td>{{ fila.resultados["Skipped"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Todavia no hay suites en este proyecto.</p>
+    {% endif %}
+</section>
+
+<section style="margin-top: 1.5rem;">
+    <h3>Defectos abiertos por severidad</h3>
+    <div class="insignias" style="justify-content: flex-start;">
+        {% for severidad, total in defectos_abiertos.items() %}
+        <span class="severidad severidad-{{ severidad|lower }}">{{ severidad }}: {{ total }}</span>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

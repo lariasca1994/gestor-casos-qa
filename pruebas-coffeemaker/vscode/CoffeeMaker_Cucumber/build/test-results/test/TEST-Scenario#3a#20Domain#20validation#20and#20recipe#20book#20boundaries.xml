@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Scenario: Domain validation and recipe book boundaries" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-03T21:53:58" hostname="LuisFelipe-PC" time="0.007">
+  <properties/>
+  <testcase name="Given an empty recipe book" classname="Scenario: Domain validation and recipe book boundaries" time="0.001"/>
+  <testcase name="When I exercise recipe, inventory, and recipe book boundary cases" classname="Scenario: Domain validation and recipe book boundaries" time="0.0"/>
+  <testcase name="Then valid domain state is retained and invalid values are rejected" classname="Scenario: Domain validation and recipe book boundaries" time="0.0"/>
+  <testcase name="classMethod" classname="Scenario: Domain validation and recipe book boundaries" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

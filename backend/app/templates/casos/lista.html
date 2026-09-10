@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Casos de {{ suite.nombre }}{% endblock %}
+{% block contenido %}
+<p><a href="/proyectos/{{ proyecto._id }}/suites">&larr; Suites de {{ proyecto.nombre }}</a></p>
+<section class="cabecera-seccion">
+    <h1>Casos de prueba &mdash; {{ suite.nombre }}</h1>
+    <a class="boton" href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/nuevo">+ Nuevo caso</a>
+</section>
+
+{% if casos %}
+<table class="tabla">
+    <thead>
+        <tr><th>Titulo</th><th>Prioridad</th><th>Estado</th><th>Ultimo resultado</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for caso in casos %}
+        {% set caso_id_str = caso._id|string %}
+        {% set ultima = ultimas_ejecuciones.get(caso_id_str) %}
+        <tr>
+            <td><a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/editar">{{ caso.titulo }}</a></td>
+            <td>{{ caso.prioridad }}</td>
+            <td>{{ caso.estado }}</td>
+            <td>
+                {% if ultima %}
+                <span class="resultado resultado-{{ ultima.resultado|lower }}">{{ ultima.resultado }}</span>
+                {% else %}
+                <span class="texto-suave">Sin ejecutar</span>
+                {% endif %}
+            </td>
+            <td class="acciones">
+                <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/ejecuciones">Ejecutar</a>
+                <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/editar">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Todavia no hay casos en esta suite. <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/nuevo">Crea el primero</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo defecto{% endblock %}
+{% block contenido %}
+<section class="tarjeta-formulario tarjeta-formulario-ancha">
+    <h1>Reportar defecto</h1>
+    <p class="texto-suave">
+        {{ proyecto.nombre }} &rsaquo; {{ suite.nombre }} &rsaquo; {{ caso.titulo }}
+        &mdash; ejecucion con resultado
+        <span class="resultado resultado-{{ ejecucion.resultado|lower }}">{{ ejecucion.resultado }}</span>
+    </p>
+    {% if error %}<p class="aviso error">{{ error }}</p>{% endif %}
+    <form method="post">
+        <label for="titulo">Titulo</label>
+        <input type="text" id="titulo" name="titulo" required autofocus>
+
+        <label for="descripcion">Descripcion</label>
+        <textarea id="descripcion" name="descripcion" rows="4"
+                  placeholder="Que se esperaba, que paso, como reproducirlo">{{ ejecucion.comentario }}</textarea>
+
+        <label for="severidad">Severidad</label>
+        <select id="severidad" name="severidad">
+            <option value="Critica">Critica</option>
+            <option value="Alta" selected>Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+        </select>
+
+        <button type="submit" class="boton">Registrar defecto</button>
+    </form>
+    <p><a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/{{ caso._id }}/ejecuciones">Volver a Ejecuciones</a></p>
+</section>
+{% endblock %}

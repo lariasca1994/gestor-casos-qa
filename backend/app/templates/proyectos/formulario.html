@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}{{ "Editar proyecto" if proyecto else "Nuevo proyecto" }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta-formulario">
+    <h1>{{ "Editar proyecto" if proyecto else "Nuevo proyecto" }}</h1>
+    {% if error %}<p class="aviso error">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ '/proyectos/' + proyecto._id|string + '/editar' if proyecto else '/proyectos/nuevo' }}">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required autofocus
+               value="{{ proyecto.nombre if proyecto else '' }}">
+
+        <label for="descripcion">Descripcion</label>
+        <textarea id="descripcion" name="descripcion" rows="4">{{ proyecto.descripcion if proyecto else '' }}</textarea>
+
+        <button type="submit" class="boton">Guardar</button>
+    </form>
+    <p><a href="/proyectos">Volver a Proyectos</a></p>
+</section>
+{% endblock %}
