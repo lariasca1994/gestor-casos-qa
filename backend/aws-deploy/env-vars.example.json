@@ -1,0 +1,7 @@
+{
+  "Variables": {
+    "MONGO_URI": "mongodb+srv://usuario:password@cluster.mongodb.net/gestor_casos_qa?retryWrites=true&w=majority",
+    "JWT_SECRET": "genera_uno_nuevo_con_secrets.token_urlsafe",
+    "SESION_HORAS": "8"
+  }
+}
