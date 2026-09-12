@@ -16,3 +16,14 @@ __pycache__/
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+backend/aws-deploy/env-vars.json
+
+# Script de creacion/ascenso de cuenta ADMIN: se queda solo local, no se
+# publica en GitHub (cualquiera con el repo podria usarlo para crearse un
+# admin en su propia base, pero no debe quedar documentado ni distribuido).
+backend/app/comandos/crear_admin.py
+
+# Paquete temporal armado para el despliegue en AWS Lambda
+backend/package/
+gestor-casos-qa-lambda.zip
