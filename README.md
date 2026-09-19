@@ -22,6 +22,10 @@ manualmente como Ejecuciones, con el reporte real (JaCoCo, surefire,
 Cucumber, pitest) como evidencia — ver el flujo completo en el README de
 esa carpeta.
 
+## Demo en vivo
+
+**Aplicación:** [immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
+
 ## Qué hace
 
 - Registro e inicio de sesión con contraseña cifrada
