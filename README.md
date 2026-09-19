@@ -1,5 +1,11 @@
 # Gestor de Casos de Prueba QA
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
+![HTMX](https://img.shields.io/badge/HTMX-3D72D7?style=flat&logo=htmx&logoColor=white)
+![Jinja](https://img.shields.io/badge/Jinja2-B41717?style=flat&logo=jinja&logoColor=white)
+
 Aplicación web para equipos de QA: organiza proyectos, suites y casos de
 prueba, registra ejecuciones con su resultado, vincula defectos y mide
 cobertura. Construida en Python (FastAPI) con MongoDB como única base de
@@ -96,10 +102,16 @@ uvicorn app.main:app --reload
 Queda en `http://127.0.0.1:8000`.
 
 Las cuentas creadas desde `/registro` quedan con rol QA.
-```
 
 ## Despliegue
 
-Aplicación sin estado propio en disco (todo vive en MongoDB), así que
-corre igual en cualquier hospedaje con soporte para Python: solo hay que
-definir `MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio.
+Aplicación sin estado propio en disco (todo vive en MongoDB), así que corre
+igual en cualquier hospedaje con soporte para Python. La instancia pública
+corre en AWS Lambda (Function URL, sin API Gateway) mediante el adaptador
+`mangum`, con MongoDB Atlas M0 como base de datos. Solo hay que definir
+`MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio.
+
+## Autor
+
+**Luis Felipe Arias Carriazo**
+[GitHub](https://github.com/lariasca1994) · [LinkedIn](https://linkedin.com/in/lfac1)
