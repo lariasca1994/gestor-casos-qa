@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Gestion de usuarios{% endblock %}
+{% block contenido %}
+<section class="cabecera-seccion">
+    <h1>Usuarios</h1>
+</section>
+
+{% if usuarios %}
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in usuarios %}
+        {% set u_id = u._id|string %}
+        {% set activo = u.get("activo", True) %}
+        <tr>
+            <td>{{ u.nombre }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.rol }}</td>
+            <td>
+                {% if activo %}
+                <span class="estado-usuario estado-usuario-activo">Activo</span>
+                {% else %}
+                <span class="estado-usuario estado-usuario-suspendido">Suspendido</span>
+                {% endif %}
+            </td>
+            <td class="acciones">
+                {% if u_id == usuario._id|string %}
+                <span class="texto-suave">(tu cuenta)</span>
+                {% else %}
+                    {% if activo %}
+                    <form method="post" action="/admin/usuarios/{{ u_id }}/suspender" class="en-linea"
+                          onsubmit="return confirm('¿Suspender la cuenta de {{ u.nombre }}? No va a poder iniciar sesion hasta que la reactives.');">
+                        <button type="submit" class="enlace-boton">Suspender</button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="/admin/usuarios/{{ u_id }}/reactivar" class="en-linea">
+                        <button type="submit" class="enlace-boton">Reactivar</button>
+                    </form>
+                    {% endif %}
+                    <form method="post" action="/admin/usuarios/{{ u_id }}/eliminar" class="en-linea"
+                          onsubmit="return confirm('Esto borra la cuenta de {{ u.nombre }} de forma permanente. Sus proyectos y casos no se borran. ¿Continuar?');">
+                        <button type="submit" class="enlace-boton enlace-boton-peligro">Eliminar</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay usuarios registrados.</p>
+{% endif %}
+{% endblock %}

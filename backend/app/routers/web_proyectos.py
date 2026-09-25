@@ -1,4 +1,5 @@
-"""Paginas de Proyectos: listar, crear, editar y archivar (solo ADMIN).
+"""Paginas de Proyectos: listar, crear, editar, archivar y eliminar (estas
+dos ultimas, solo ADMIN).
 
 Cada QA solo ve y edita sus propios proyectos; el ADMIN ve y edita todos."""
 
@@ -92,4 +93,12 @@ def editar(
 @router.post("/{proyecto_id}/archivar")
 def archivar(proyecto_id: str, usuario: dict = Depends(exigir_admin)):
     repo_proyectos.archivar(proyecto_id)
+    return RedirectResponse(url="/proyectos", status_code=303)
+
+
+@router.post("/{proyecto_id}/eliminar")
+def eliminar(proyecto_id: str, usuario: dict = Depends(exigir_admin)):
+    """Borrado real e irreversible (a diferencia de archivar): solo ADMIN,
+    el dueno no puede hacerlo aunque sea su proyecto."""
+    repo_proyectos.eliminar(proyecto_id)
     return RedirectResponse(url="/proyectos", status_code=303)

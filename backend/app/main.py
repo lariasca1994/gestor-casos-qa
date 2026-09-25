@@ -16,6 +16,7 @@ from app.routers import (
     web_ejecuciones,
     web_proyectos,
     web_suites,
+    web_usuarios,
 )
 
 app = FastAPI(title="Gestor de Casos de Prueba QA")
@@ -59,3 +60,4 @@ app.include_router(web_casos.router)
 app.include_router(web_ejecuciones.router)
 app.include_router(web_defectos.router)
 app.include_router(web_dashboard.router)
+app.include_router(web_usuarios.router)

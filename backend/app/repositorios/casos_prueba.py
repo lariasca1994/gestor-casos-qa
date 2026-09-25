@@ -79,3 +79,18 @@ def actualizar(
         return resultado.matched_count > 0
     except Exception:
         return False
+
+
+def eliminar(caso_id: str) -> bool:
+    """Hard delete del caso junto con sus ejecuciones y los defectos
+    vinculados a ellas, para no dejar huerfanos. Se permite a dueno o ADMIN
+    (se valida en el router con proyecto_autorizado), igual que editar."""
+    db = obtener_db()
+    try:
+        oid = ObjectId(caso_id)
+    except Exception:
+        return False
+    db.defectos.delete_many({"caso_id": caso_id})
+    db.ejecuciones.delete_many({"caso_id": caso_id})
+    resultado = db.casos_prueba.delete_one({"_id": oid})
+    return resultado.deleted_count > 0

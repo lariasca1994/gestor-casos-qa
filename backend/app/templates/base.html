@@ -12,6 +12,9 @@
         <nav class="nav-principal">
             {% if usuario %}
                 <a href="/proyectos">Proyectos</a>
+                {% if usuario.rol == "ADMIN" %}
+                <a href="/admin/usuarios">Usuarios</a>
+                {% endif %}
                 <span class="rol-actual">{{ usuario.rol }}</span>
                 <a href="/logout">Salir ({{ usuario.nombre }})</a>
             {% else %}

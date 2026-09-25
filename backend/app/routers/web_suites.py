@@ -103,3 +103,14 @@ def editar(
 ):
     repo_suites.actualizar(suite_id, nombre, descripcion)
     return RedirectResponse(url=f"/proyectos/{proyecto_id}/suites", status_code=303)
+
+
+@router.post("/{suite_id}/eliminar")
+def eliminar(
+    proyecto_id: str,
+    suite_id: str,
+    usuario: dict = Depends(exigir_login),
+    proyecto: dict = Depends(proyecto_autorizado),
+):
+    repo_suites.eliminar(suite_id)
+    return RedirectResponse(url=f"/proyectos/{proyecto_id}/suites", status_code=303)

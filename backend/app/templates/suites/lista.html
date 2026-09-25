@@ -24,6 +24,10 @@
             <td class="acciones">
                 <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/editar">Editar</a>
                 <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos">Ver casos</a>
+                <form method="post" action="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/eliminar" class="en-linea"
+                      onsubmit="return confirm('Esto borra la suite y todos sus casos, ejecuciones y defectos. No se puede deshacer. ¿Continuar?');">
+                    <button type="submit" class="enlace-boton enlace-boton-peligro">Eliminar</button>
+                </form>
             </td>
         </tr>
         {% endfor %}

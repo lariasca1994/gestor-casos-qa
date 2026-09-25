@@ -162,3 +162,17 @@ def editar(
     return RedirectResponse(
         url=f"/proyectos/{proyecto_id}/suites/{suite_id}/casos", status_code=303
     )
+
+
+@router.post("/{caso_id}/eliminar")
+def eliminar(
+    proyecto_id: str,
+    suite_id: str,
+    caso_id: str,
+    usuario: dict = Depends(exigir_login),
+    proyecto: dict = Depends(proyecto_autorizado),
+):
+    repo_casos.eliminar(caso_id)
+    return RedirectResponse(
+        url=f"/proyectos/{proyecto_id}/suites/{suite_id}/casos", status_code=303
+    )

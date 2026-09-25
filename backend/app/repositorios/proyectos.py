@@ -54,7 +54,8 @@ def actualizar(proyecto_id: str, nombre: str, descripcion: str) -> bool:
 
 def archivar(proyecto_id: str) -> bool:
     """Solo ADMIN puede llamar a esto (se valida en el router). No se borra,
-    se marca inactivo: conserva las suites/casos ya vinculados a el."""
+    se marca inactivo: conserva las suites/casos ya vinculados a el. Para el
+    borrado real (irreversible) ver eliminar()."""
     db = obtener_db()
     try:
         resultado = db.proyectos.update_one(
@@ -63,3 +64,25 @@ def archivar(proyecto_id: str) -> bool:
         return resultado.matched_count > 0
     except Exception:
         return False
+
+
+def eliminar(proyecto_id: str) -> bool:
+    """Hard delete del proyecto y de todo lo que cuelga de el. Solo ADMIN
+    puede llamar a esto (se valida en el router) -- a diferencia de
+    archivar(), esto es irreversible.
+
+    suites, casos_prueba, ejecuciones y defectos guardan todos un campo
+    proyecto_id (string, no ObjectId) apuntando a este proyecto, asi que se
+    puede borrar en cascada por ese campo directamente sin tener que ir
+    coleccion por coleccion via suite_id/caso_id."""
+    db = obtener_db()
+    try:
+        oid = ObjectId(proyecto_id)
+    except Exception:
+        return False
+    db.defectos.delete_many({"proyecto_id": proyecto_id})
+    db.ejecuciones.delete_many({"proyecto_id": proyecto_id})
+    db.casos_prueba.delete_many({"proyecto_id": proyecto_id})
+    db.suites.delete_many({"proyecto_id": proyecto_id})
+    resultado = db.proyectos.delete_one({"_id": oid})
+    return resultado.deleted_count > 0

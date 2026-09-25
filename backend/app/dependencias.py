@@ -17,14 +17,21 @@ class NoAutorizado(Exception):
 
 
 def usuario_actual(request: Request) -> dict | None:
-    """Devuelve el usuario de la sesion activa, o None si no hay ninguna."""
+    """Devuelve el usuario de la sesion activa, o None si no hay ninguna.
+
+    El usuario se relee de Mongo por _id en cada request (no solo del JWT),
+    asi que una cuenta que un ADMIN acaba de suspender queda deslogueada de
+    inmediato, sin esperar a que expire el token."""
     token = request.cookies.get(COOKIE_SESION)
     if not token:
         return None
     carga = leer_token(token)
     if not carga:
         return None
-    return buscar_por_id(carga["sub"])
+    usuario = buscar_por_id(carga["sub"])
+    if usuario is None or not usuario.get("activo", True):
+        return None
+    return usuario
 
 
 def exigir_login(request: Request) -> dict:

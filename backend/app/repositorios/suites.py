@@ -44,3 +44,28 @@ def actualizar(suite_id: str, nombre: str, descripcion: str) -> bool:
         return resultado.matched_count > 0
     except Exception:
         return False
+
+
+def eliminar(suite_id: str) -> bool:
+    """Hard delete de la suite y de sus casos, para no dejar huerfanos. Se
+    permite a dueno o ADMIN (se valida en el router con proyecto_autorizado),
+    igual que editar.
+
+    casos_prueba tiene suite_id, pero ejecuciones y defectos solo guardan
+    caso_id (no suite_id), asi que primero hay que ubicar los ids de los
+    casos de esta suite para poder borrar en cascada tambien sus
+    ejecuciones/defectos."""
+    db = obtener_db()
+    try:
+        oid = ObjectId(suite_id)
+    except Exception:
+        return False
+    caso_ids = [
+        str(caso["_id"]) for caso in db.casos_prueba.find({"suite_id": suite_id}, {"_id": 1})
+    ]
+    if caso_ids:
+        db.defectos.delete_many({"caso_id": {"$in": caso_ids}})
+        db.ejecuciones.delete_many({"caso_id": {"$in": caso_ids}})
+    db.casos_prueba.delete_many({"suite_id": suite_id})
+    resultado = db.suites.delete_one({"_id": oid})
+    return resultado.deleted_count > 0

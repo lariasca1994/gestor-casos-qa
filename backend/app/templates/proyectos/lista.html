@@ -29,6 +29,10 @@
                 <form method="post" action="/proyectos/{{ proyecto._id }}/archivar" class="en-linea">
                     <button type="submit" class="enlace-boton">Archivar</button>
                 </form>
+                <form method="post" action="/proyectos/{{ proyecto._id }}/eliminar" class="en-linea"
+                      onsubmit="return confirm('Esto borra el proyecto y todas sus suites, casos, ejecuciones y defectos. No se puede deshacer. ¿Continuar?');">
+                    <button type="submit" class="enlace-boton enlace-boton-peligro">Eliminar</button>
+                </form>
                 {% endif %}
             </td>
         </tr>
