@@ -74,6 +74,91 @@ backend/
     └── static/               Hoja de estilos y tema claro/oscuro
 ```
 
+## Diagrama de Arquitectura
+
+```mermaid
+flowchart TB
+    %% ============================================================
+    %%  DIAGRAMA DE ARQUITECTURA — GESTOR DE CASOS QA
+    %%  Colores basados en las guías de marca oficiales de cada tecnología.
+    %% ============================================================
+
+    subgraph Usuario["👤 Usuario QA"]
+        Browser["Navegador Web<br/>Jinja2 + HTMX"]
+    end
+
+    subgraph AWS["☁️ AWS Lambda"]
+        subgraph App["Aplicación FastAPI"]
+            Mangum["Mangum<br/>Adaptador ASGI"]
+            Main["main.py<br/>Punto de entrada"]
+            Routers["routers/<br/>Páginas por sección"]
+            Templates["templates/<br/>Plantillas Jinja2"]
+            Static["static/<br/>CSS · Tema claro/oscuro"]
+        end
+
+        subgraph Seguridad["Autenticación"]
+            JWT["JWT<br/>Cookie httponly"]
+            Bcrypt["bcrypt<br/>Hash de contraseñas"]
+        end
+
+        subgraph Datos["Acceso a datos"]
+            Repos["repositorios/<br/>Por colección"]
+            Database["database.py<br/>Conexión Mongo + índices"]
+        end
+    end
+
+    subgraph MongoDB["🗄️ MongoDB Atlas"]
+        Colecciones["Colecciones:<br/>usuarios · proyectos · suites<br/>casos_prueba · ejecuciones · defectos"]
+    end
+
+    subgraph Pruebas["🧪 Suite de pruebas (repo aparte)"]
+        JUnit["JUnit + Mockito"]
+        JaCoCo["JaCoCo"]
+        Cucumber["Cucumber"]
+        Pitest["pitest"]
+    end
+
+    %% ---- Flujo de datos ----
+    Browser -->|HTTPS| Mangum
+    Mangum --> Main
+    Main --> Routers
+    Routers --> Templates
+    Routers --> Static
+    Routers --> JWT
+    JWT --> Bcrypt
+    Routers --> Repos
+    Repos --> Database
+    Database -->|PyMongo| Colecciones
+    Pruebas -.->|Resultados registrados<br/>manualmente| Browser
+
+    %% ---- Colores de marca (Brand Colors) ----
+    classDef fastapi fill:#009688,stroke:#004D40,stroke-width:2px,color:#FFFFFF;
+    classDef mongodb fill:#47A248,stroke:#1B5E20,stroke-width:2px,color:#FFFFFF;
+    classDef jinja fill:#B41717,stroke:#7F0000,stroke-width:2px,color:#FFFFFF;
+    classDef htmx fill:#3D72D7,stroke:#1A3A6C,stroke-width:2px,color:#FFFFFF;
+    classDef aws fill:#FF9900,stroke:#B36B00,stroke-width:2px,color:#000000;
+    classDef python fill:#3572A5,stroke:#1A3A5C,stroke-width:2px,color:#FFFFFF;
+    classDef security fill:#333333,stroke:#000000,stroke-width:2px,color:#FFFFFF;
+    classDef neutral fill:#F5F5F5,stroke:#CCCCCC,stroke-width:1px,color:#333333;
+    classDef test fill:#F3E8FF,stroke:#8A05FF,stroke-width:1px,color:#333333;
+
+    class Browser neutral;
+    class Mangum,Main,Routers,Templates,Static fastapi;
+    class Repos,Database python;
+    class Colecciones mongodb;
+    class JWT,Bcrypt security;
+    class JUnit,JaCoCo,Cucumber,Pitest test;
+
+    %% ---- Estilos de subgráficos ----
+    style Usuario fill:#FAFAFA,stroke:#DDDDDD,stroke-width:1px;
+    style AWS fill:#FFF8E1,stroke:#FF9900,stroke-width:2px,stroke-dasharray:5 5;
+    style App fill:#E0F2F1,stroke:#009688,stroke-width:1px;
+    style Seguridad fill:#F5F5F5,stroke:#333333,stroke-width:1px;
+    style Datos fill:#E3F2FD,stroke:#3572A5,stroke-width:1px;
+    style MongoDB fill:#E8F5E9,stroke:#47A248,stroke-width:2px,stroke-dasharray:5 5;
+    style Pruebas fill:#F3E8FF,stroke:#8A05FF,stroke-width:1px,stroke-dasharray:3 3;
+```
+
 ## A qué se conecta
 
 Una única base MongoDB con estas colecciones: `usuarios`, `proyectos`,
