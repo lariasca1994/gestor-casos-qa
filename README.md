@@ -1,15 +1,32 @@
 # Gestor de Casos de Prueba QA
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
-![HTMX](https://img.shields.io/badge/HTMX-3D72D7?style=flat&logo=htmx&logoColor=white)
-![Jinja](https://img.shields.io/badge/Jinja2-B41717?style=flat&logo=jinja&logoColor=white)
+<p>
+  <a href="https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/"><img src="docs/demo-badge.svg" alt="Abrir la demo en vivo" height="32"></a>
+  <a href="https://frontend-nine-topaz-99.vercel.app"><img src="https://portafolio-status.onrender.com/api/status/gestor-casos-qa/badge.svg" alt="Estado en vivo del proyecto" height="32"></a>
+  <a href="https://d4i3vsgw7xwmh.cloudfront.net"><img src="https://portafolio-status.onrender.com/api/status/gestor-casos-qa/qa-badge.svg" alt="Fecha y resultado de la última prueba E2E" height="32"></a>
+</p>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![HTMX](https://img.shields.io/badge/HTMX-3D72D7?style=for-the-badge&logo=htmx&logoColor=white)
+![Jinja](https://img.shields.io/badge/Jinja2-B41717?style=for-the-badge&logo=jinja&logoColor=white)
 
 Aplicación web para equipos de QA: organiza proyectos, suites y casos de
 prueba, registra ejecuciones con su resultado, vincula defectos y mide
 cobertura. Construida en Python (FastAPI) con MongoDB como única base de
 datos.
+
+### En pocas palabras
+
+- **Qué hace:** es el cuaderno de trabajo de un equipo de QA. Ahí se definen qué
+  se va a probar (casos de prueba agrupados en suites y proyectos), se anota el
+  resultado de cada ejecución y se reportan los defectos encontrados.
+- **Qué muestra:** cuánto está cubierto y cómo van los resultados, por proyecto
+  y por suite.
+- **Cómo probarlo:** entra a la [demo](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/),
+  crea una cuenta en *Registro* y arma tu primer proyecto. Para correrlo en tu
+  equipo, ve a [Cómo ejecutarlo](#cómo-ejecutarlo).
 
 Es la capa visible del proyecto insignia de QA/automatización del
 portafolio. La suite de pruebas real vive en
@@ -74,90 +91,21 @@ backend/
     └── static/               Hoja de estilos y tema claro/oscuro
 ```
 
-## Diagrama de Arquitectura
+## Arquitectura
 
-```mermaid
-flowchart TB
-    %% ============================================================
-    %%  DIAGRAMA DE ARQUITECTURA — GESTOR DE CASOS QA
-    %%  Colores basados en las guías de marca oficiales de cada tecnología.
-    %% ============================================================
+<p align="center">
+  <img src="docs/arquitectura.svg" alt="Diagrama de arquitectura: FastAPI con Mangum en AWS Lambda detrás de una Function URL, MongoDB Atlas, suite CoffeeMaker local y pruebas E2E de qa-evidencia" width="100%">
+</p>
 
-    subgraph Usuario["👤 Usuario QA"]
-        Browser["Navegador Web<br/>Jinja2 + HTMX"]
-    end
-
-    subgraph AWS["☁️ AWS Lambda"]
-        subgraph App["Aplicación FastAPI"]
-            Mangum["Mangum<br/>Adaptador ASGI"]
-            Main["main.py<br/>Punto de entrada"]
-            Routers["routers/<br/>Páginas por sección"]
-            Templates["templates/<br/>Plantillas Jinja2"]
-            Static["static/<br/>CSS · Tema claro/oscuro"]
-        end
-
-        subgraph Seguridad["Autenticación"]
-            JWT["JWT<br/>Cookie httponly"]
-            Bcrypt["bcrypt<br/>Hash de contraseñas"]
-        end
-
-        subgraph Datos["Acceso a datos"]
-            Repos["repositorios/<br/>Por colección"]
-            Database["database.py<br/>Conexión Mongo + índices"]
-        end
-    end
-
-    subgraph MongoDB["🗄️ MongoDB Atlas"]
-        Colecciones["Colecciones:<br/>usuarios · proyectos · suites<br/>casos_prueba · ejecuciones · defectos"]
-    end
-
-    subgraph Pruebas["🧪 Suite de pruebas (repo aparte)"]
-        JUnit["JUnit + Mockito"]
-        JaCoCo["JaCoCo"]
-        Cucumber["Cucumber"]
-        Pitest["pitest"]
-    end
-
-    %% ---- Flujo de datos ----
-    Browser -->|HTTPS| Mangum
-    Mangum --> Main
-    Main --> Routers
-    Routers --> Templates
-    Routers --> Static
-    Routers --> JWT
-    JWT --> Bcrypt
-    Routers --> Repos
-    Repos --> Database
-    Database -->|PyMongo| Colecciones
-    Pruebas -.->|Resultados registrados<br/>manualmente| Browser
-
-    %% ---- Colores de marca (Brand Colors) ----
-    classDef fastapi fill:#009688,stroke:#004D40,stroke-width:2px,color:#FFFFFF;
-    classDef mongodb fill:#47A248,stroke:#1B5E20,stroke-width:2px,color:#FFFFFF;
-    classDef jinja fill:#B41717,stroke:#7F0000,stroke-width:2px,color:#FFFFFF;
-    classDef htmx fill:#3D72D7,stroke:#1A3A6C,stroke-width:2px,color:#FFFFFF;
-    classDef aws fill:#FF9900,stroke:#B36B00,stroke-width:2px,color:#000000;
-    classDef python fill:#3572A5,stroke:#1A3A5C,stroke-width:2px,color:#FFFFFF;
-    classDef security fill:#333333,stroke:#000000,stroke-width:2px,color:#FFFFFF;
-    classDef neutral fill:#F5F5F5,stroke:#CCCCCC,stroke-width:1px,color:#333333;
-    classDef test fill:#F3E8FF,stroke:#8A05FF,stroke-width:1px,color:#333333;
-
-    class Browser neutral;
-    class Mangum,Main,Routers,Templates,Static fastapi;
-    class Repos,Database python;
-    class Colecciones mongodb;
-    class JWT,Bcrypt security;
-    class JUnit,JaCoCo,Cucumber,Pitest test;
-
-    %% ---- Estilos de subgráficos ----
-    style Usuario fill:#FAFAFA,stroke:#DDDDDD,stroke-width:1px;
-    style AWS fill:#FFF8E1,stroke:#FF9900,stroke-width:2px,stroke-dasharray:5 5;
-    style App fill:#E0F2F1,stroke:#009688,stroke-width:1px;
-    style Seguridad fill:#F5F5F5,stroke:#333333,stroke-width:1px;
-    style Datos fill:#E3F2FD,stroke:#3572A5,stroke-width:1px;
-    style MongoDB fill:#E8F5E9,stroke:#47A248,stroke-width:2px,stroke-dasharray:5 5;
-    style Pruebas fill:#F3E8FF,stroke:#8A05FF,stroke-width:1px,stroke-dasharray:3 3;
-```
+- **AWS Lambda** ejecuta la app FastAPI mediante el adaptador Mangum, expuesta
+  con una Function URL (sin API Gateway).
+- Las páginas se generan con **Jinja2 + HTMX**; la sesión viaja en un JWT dentro
+  de una cookie httponly y las contraseñas se guardan con bcrypt.
+- **MongoDB Atlas** guarda las seis colecciones: usuarios, proyectos, suites,
+  casos de prueba, ejecuciones y defectos.
+- La **suite CoffeeMaker** corre en local y sus reportes se registran en la app
+  como ejecuciones; **qa-evidencia** prueba la demo automáticamente dos veces al
+  día.
 
 ## A qué se conecta
 
