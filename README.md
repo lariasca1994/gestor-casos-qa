@@ -41,7 +41,7 @@ esa carpeta.
 
 ## Demo en vivo
 
-**Aplicación:** [immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
+**Aplicación:** [abrir la demo en vivo](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
 
 ## Qué hace
 
