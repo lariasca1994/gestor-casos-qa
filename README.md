@@ -115,8 +115,7 @@ servicio ni clave de API.
 
 ## Cómo ejecutarlo
 
-Requisitos: Python 3.11+ y una base MongoDB accesible (Atlas M0 gratis
-alcanza de sobra).
+Requisitos: Python 3.11+ y una base MongoDB accesible (por ejemplo, Atlas).
 
 ```bash
 cd backend
@@ -145,7 +144,7 @@ Las cuentas creadas desde `/registro` quedan con rol QA.
 Aplicación sin estado propio en disco (todo vive en MongoDB), así que corre
 igual en cualquier hospedaje con soporte para Python. La instancia pública
 corre en AWS Lambda (Function URL, sin API Gateway) mediante el adaptador
-`mangum`, con MongoDB Atlas M0 como base de datos. Solo hay que definir
+`mangum`, con MongoDB Atlas como base de datos. Solo hay que definir
 `MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio.
 
 ## Autor
