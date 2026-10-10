@@ -2,7 +2,7 @@
 los redireccionamientos de sesion (login/permisos) en un solo lugar."""
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -48,9 +48,17 @@ def no_autorizado(request: Request, exc: NoAutorizado):
 
 @app.get("/", response_class=HTMLResponse)
 def inicio(request: Request):
-    return templates.TemplateResponse(
-        "inicio.html", {"request": request, "usuario": usuario_actual(request)}
-    )
+    # La portada de acceso es la primera pantalla, igual que en el resto
+    # del portafolio; con sesion abierta se va directo a los proyectos.
+    if usuario_actual(request):
+        return RedirectResponse(url="/proyectos", status_code=303)
+    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    # Los navegadores lo piden en la raiz aunque la pagina declare otro icono.
+    return FileResponse("app/static/iconos/favicon.ico")
 
 
 app.include_router(web_auth.router)

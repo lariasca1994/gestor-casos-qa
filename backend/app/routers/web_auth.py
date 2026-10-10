@@ -1,46 +1,95 @@
-"""Crea los proyectos de ejemplo para las cuentas que ya existen.
+"""Registro, inicio y cierre de sesion.
 
-Las cuentas nuevas los reciben solas al registrarse (ver web_auth). Este
-comando es solo para las que se crearon antes de ese cambio. Se puede
-correr varias veces sin duplicar nada: salta a quien ya los tenga.
-
-Uso:
-    cd backend
-    python -m app.comandos.poblar_ejemplos
+El registro publico siempre crea cuentas con rol QA. La cuenta ADMIN de
+revision se crea aparte con app.comandos.crear_admin (ver README) -- mismo
+criterio que en PRPagos: el rol de administrador no sale de un formulario
+publico.
 """
 
-from app.database import obtener_db
-from app.datos_ejemplo import crear_proyectos_ejemplo, ya_tiene_ejemplos
+from fastapi import APIRouter, Form, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+
+from app.config import COOKIE_SESION, SESION_HORAS
+from app.datos_ejemplo import crear_proyectos_ejemplo
+from app.dependencias import usuario_actual
+from app.repositorios.usuarios import buscar_por_correo, crear_usuario
+from app.seguridad import crear_token, verificar
+
+router = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
 
 
-def main() -> None:
-    db = obtener_db()
-    usuarios = list(db.usuarios.find({}, {"_id": 1, "email": 1}))
-
-    if not usuarios:
-        print("No hay usuarios en la base.")
-        return
-
-    poblados = saltados = 0
-
-    for usuario in usuarios:
-        usuario_id = str(usuario["_id"])
-        email = usuario.get("email", usuario_id)
-
-        if ya_tiene_ejemplos(usuario_id):
-            print(f"  {email}: ya tenia los ejemplos, se salta.")
-            saltados += 1
-            continue
-
-        creados = crear_proyectos_ejemplo(creado_por=usuario_id)
-        if creados:
-            print(f"  {email}: {creados} proyecto(s) de ejemplo creados.")
-            poblados += 1
-        else:
-            print(f"  {email}: no se crearon (revisa el log de errores).")
-
-    print(f"\nListo. {poblados} cuenta(s) pobladas, {saltados} sin cambios.")
+@router.get("/registro", response_class=HTMLResponse)
+def formulario_registro(request: Request):
+    if usuario_actual(request):
+        return RedirectResponse(url="/proyectos", status_code=303)
+    return templates.TemplateResponse(
+        "registro.html", {"request": request, "error": None}
+    )
 
 
-if __name__ == "__main__":
-    main()
+@router.post("/registro", response_class=HTMLResponse)
+def procesar_registro(
+    request: Request,
+    email: str = Form(...),
+    nombre: str = Form(...),
+    contrasena: str = Form(...),
+    confirmar: str = Form(...),
+):
+    error = None
+    if contrasena != confirmar:
+        error = "Las contrasenas no coinciden."
+    elif len(contrasena) < 8:
+        error = "La contrasena debe tener al menos 8 caracteres."
+    elif buscar_por_correo(email):
+        error = "Ya existe una cuenta con ese correo."
+
+    if error:
+        return templates.TemplateResponse(
+            "registro.html",
+            {"request": request, "error": error},
+            status_code=400,
+        )
+
+    usuario_id = crear_usuario(email=email, nombre=nombre, contrasena=contrasena)
+    # La cuenta nueva arranca con proyectos de ejemplo para que haya algo
+    # que explorar. No lanza excepciones: si falla, el registro sigue igual.
+    crear_proyectos_ejemplo(creado_por=usuario_id)
+    return RedirectResponse(url="/login", status_code=303)
+
+
+@router.get("/login", response_class=HTMLResponse)
+def formulario_login(request: Request):
+    if usuario_actual(request):
+        return RedirectResponse(url="/proyectos", status_code=303)
+    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+
+
+@router.post("/login", response_class=HTMLResponse)
+def procesar_login(request: Request, email: str = Form(...), contrasena: str = Form(...)):
+    usuario = buscar_por_correo(email)
+    if not usuario or not verificar(contrasena, usuario["password_hash"]):
+        return templates.TemplateResponse(
+            "login.html",
+            {"request": request, "error": "Correo o contrasena incorrectos."},
+            status_code=400,
+        )
+
+    token = crear_token(str(usuario["_id"]), usuario["email"], usuario["rol"])
+    respuesta = RedirectResponse(url="/proyectos", status_code=303)
+    respuesta.set_cookie(
+        COOKIE_SESION,
+        token,
+        httponly=True,
+        samesite="lax",
+        max_age=SESION_HORAS * 3600,
+    )
+    return respuesta
+
+
+@router.get("/logout")
+def logout():
+    respuesta = RedirectResponse(url="/", status_code=303)
+    respuesta.delete_cookie(COOKIE_SESION)
+    return respuesta
