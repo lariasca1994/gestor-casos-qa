@@ -7,17 +7,18 @@ protege la plataforma. Para la parte técnica vuelve al [README](../README.md).
 
 ## Contenido
 
-1. [En pocas palabras](#1-en-pocas-palabras)
-2. [Antes de empezar](#2-antes-de-empezar)
-3. [Paso a paso](#3-paso-a-paso)
-4. [Qué información ingresas y dónde queda](#4-qué-información-ingresas-y-dónde-queda)
-5. [Seguridad: qué se garantiza](#5-seguridad-qué-se-garantiza)
-6. [Límites y recomendaciones](#6-límites-y-recomendaciones)
-7. [Preguntas frecuentes](#7-preguntas-frecuentes)
+1. [Proyecto: objetivos y alcances](#1-proyecto-objetivos-y-alcances)
+2. [Glosario](#2-glosario)
+3. [Plataformas, base de datos y servicios](#3-plataformas-base-de-datos-y-servicios)
+4. [Paso a paso](#4-paso-a-paso)
+5. [Seguridad: tu información protegida](#5-seguridad-tu-información-protegida)
+6. [Agradecimientos](#6-agradecimientos)
 
 ---
 
-## 1. En pocas palabras
+## 1. Proyecto: objetivos y alcances
+
+### Objetivo
 
 Es el cuaderno de trabajo de un equipo de QA. El trabajo se organiza así:
 
@@ -28,15 +29,58 @@ Proyecto → Suites de prueba → Casos de prueba → Ejecuciones → Defectos
 Defines qué vas a probar, anotas el resultado de cada ejecución, reportas los defectos y ves la
 cobertura en un tablero.
 
-## 2. Antes de empezar
+### Alcance: qué necesitas y qué esperar
 
 - Solo necesitas un navegador.
 - Al crear tu cuenta, la plataforma te agrega **proyectos de ejemplo** con suites y casos ya
   escritos, para que veas cómo se usa desde el primer momento.
 
-## 3. Paso a paso
+### Límites
 
-### 3.1 Crear una cuenta
+Es una demo de portafolio:
+
+- No hay bloqueo por intentos fallidos ni recuperación de contraseña por correo.
+- La contraseña solo exige 8 caracteres: usa una frase larga que no uses en otros sitios.
+- No escribas datos personales o confidenciales en los casos y defectos.
+
+## 2. Glosario
+
+Palabras técnicas que aparecen en este manual, explicadas en lenguaje simple.
+
+| Término | Qué significa |
+|---|---|
+| **Administrador** | Cuenta con permisos para gestionar usuarios y configuraciones de la aplicación. |
+| **API** | Puerta de entrada de un programa para que otros programas le pidan o le envíen datos. |
+| **Backend** | La parte de la aplicación que trabaja "detrás": procesa lo que envías y habla con la base de datos. |
+| **Base de datos** | Lugar donde la aplicación guarda la información de forma ordenada y permanente. |
+| **Caso de prueba** | Pasos y resultado esperado para comprobar que una función de un sistema trabaja bien. |
+| **Contraseña cifrada (hash)** | La contraseña no se guarda tal cual, sino como una "huella" de la que no se puede recuperar el texto original. |
+| **Cookie** | Pequeño dato que el navegador guarda para recordar tu sesión en ese sitio. |
+| **Defecto (bug)** | Error encontrado al probar: el sistema no hace lo que debería. |
+| **JWT** | Tipo de token firmado digitalmente: si alguien lo altera, el servidor lo rechaza. |
+| **Modo mantenimiento** | Pantalla que aparece cuando el servicio o su base de datos no responden; se recupera sola cuando vuelven. |
+| **Navegador** | Programa con el que abres páginas web: Chrome, Edge, Firefox, Safari. |
+| **Nube** | Servidores de una empresa (Amazon, Microsoft, Google, Oracle…) donde la aplicación funciona sin depender de un computador propio. |
+| **Rate limit (límite de intentos)** | Tope de intentos en poco tiempo, para frenar a quien intenta adivinar contraseñas. |
+| **Rol** | Tipo de cuenta que define qué puede hacer cada persona (por ejemplo, usuario o administrador). |
+| **Servidor** | Computador en la nube que atiende las peticiones de la aplicación. |
+| **Sesión** | El tiempo en que la aplicación te reconoce después de iniciar sesión, sin pedirte la contraseña de nuevo. |
+| **Suite de pruebas** | Grupo de casos de prueba relacionados. |
+| **Variables de entorno / secretos** | Claves y contraseñas internas de la aplicación, guardadas fuera del código para que no queden expuestas. |
+
+## 3. Plataformas, base de datos y servicios
+
+Qué servicio de nube, base de datos o API usa el proyecto y para qué sirve cada uno.
+
+| Plataforma | Tipo | Qué hace en el proyecto |
+|---|---|---|
+| ![AWS Lambda](https://img.shields.io/badge/AWS_Lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white) | Nube | Ejecuta la app FastAPI mediante el adaptador Mangum, expuesta con una Function URL (sin API Gateway). |
+| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) | Base de datos | MongoDB Atlas guarda las seis colecciones: `usuarios`, `proyectos`, `suites`, `casos_prueba`, `ejecuciones` y `defectos`. No requiere ningún otro servicio ni clave de API. |
+| ![qa-evidencia](https://img.shields.io/badge/qa--evidencia-2EAD33?style=for-the-badge&logo=playwright&logoColor=white) | Pruebas automatizadas | Prueba la demo automáticamente dos veces al día y publica la evidencia. |
+
+## 4. Paso a paso
+
+### 4.1 Crear una cuenta
 
 ![Formulario de registro con sus campos numerados](img/manual/01-registro.png)
 
@@ -51,7 +95,7 @@ cobertura en un tablero.
 El registro siempre crea cuentas con rol QA. El rol de administrador no se puede pedir desde el
 formulario.
 
-### 3.2 Iniciar sesión
+### 4.2 Iniciar sesión
 
 ![Formulario de inicio de sesión](img/manual/02-login.png)
 
@@ -63,7 +107,7 @@ formulario.
 
 Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos casos.
 
-### 3.3 Proyectos
+### 4.3 Proyectos
 
 ![Lista de proyectos](img/manual/03-proyectos.png)
 
@@ -75,7 +119,7 @@ Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos caso
 
 Solo ves **tus** proyectos. El administrador ve todos.
 
-### 3.4 Crear un proyecto
+### 4.4 Crear un proyecto
 
 ![Formulario de proyecto](img/manual/04-proyecto-nuevo.png)
 
@@ -85,7 +129,7 @@ Solo ves **tus** proyectos. El administrador ve todos.
 | 2 | Descripción | Alcance de las pruebas | Opcional |
 | 3 | Guardar | Botón | Crea el proyecto |
 
-### 3.5 Suites de prueba
+### 4.5 Suites de prueba
 
 ![Suites de un proyecto](img/manual/05-suites.png)
 
@@ -98,7 +142,7 @@ Una suite agrupa casos de un mismo módulo o tipo de prueba.
 
 Cada suite también ofrece **Editar** y **Eliminar**.
 
-### 3.6 Casos de prueba
+### 4.6 Casos de prueba
 
 ![Casos de una suite](img/manual/06-casos.png)
 
@@ -109,7 +153,7 @@ Cada suite también ofrece **Editar** y **Eliminar**.
 
 La columna **Último resultado** muestra cómo terminó la ejecución más reciente.
 
-### 3.7 Crear un caso
+### 4.7 Crear un caso
 
 ![Formulario de caso de prueba con sus campos numerados](img/manual/07-caso-nuevo.png)
 
@@ -122,7 +166,7 @@ La columna **Último resultado** muestra cómo terminó la ejecución más recie
 | 5 | Estado | Activo u Obsoleto | Los obsoletos se conservan como historial |
 | 6 | Guardar | Botón | Crea el caso |
 
-### 3.8 Ejecutar un caso
+### 4.8 Ejecutar un caso
 
 ![Registro de una ejecución e historial](img/manual/08-ejecuciones.png)
 
@@ -133,7 +177,7 @@ La columna **Último resultado** muestra cómo terminó la ejecución más recie
 | 3 | Registrar | Guarda la ejecución en el **Historial** |
 | 4 | Reportar defecto | Aparece en las ejecuciones fallidas para registrar el defecto encontrado |
 
-### 3.9 Reportar un defecto
+### 4.9 Reportar un defecto
 
 ![Formulario de defecto](img/manual/09-defecto-nuevo.png)
 
@@ -144,13 +188,13 @@ La columna **Último resultado** muestra cómo terminó la ejecución más recie
 | 3 | Severidad | Crítica, Alta, Media o Baja |
 | 4 | Registrar defecto | Botón |
 
-### 3.10 Seguimiento de defectos
+### 4.10 Seguimiento de defectos
 
 ![Lista de defectos del proyecto](img/manual/10-defectos.png)
 
 En **Defectos** cambias el estado de cada uno: **Abierto**, **En progreso** o **Cerrado**.
 
-### 3.11 Dashboard de cobertura
+### 4.11 Dashboard de cobertura
 
 ![Dashboard de cobertura y resultados](img/manual/11-dashboard.png)
 
@@ -161,7 +205,24 @@ En **Defectos** cambias el estado de cada uno: **Abierto**, **En progreso** o **
 | Cobertura por suite | El mismo detalle, suite por suite |
 | Defectos abiertos por severidad | Cuántos defectos siguen abiertos de cada severidad |
 
-## 4. Qué información ingresas y dónde queda
+### 4.12 Preguntas frecuentes
+
+**¿De dónde salieron los proyectos que veo al entrar?** Son los proyectos de ejemplo que la
+plataforma crea al registrarte. Puedes editarlos o usarlos como plantilla.
+
+**¿Puedo borrar un proyecto?** Archivar y eliminar proyectos es una acción reservada al
+administrador, para no perder historial de pruebas por error.
+
+**¿Qué diferencia hay entre Blocked y Skipped?** *Blocked*: el caso no se pudo ejecutar por un
+impedimento (ambiente caído, dato faltante). *Skipped*: se decidió no ejecutarlo en esa ronda.
+
+**¿Qué significa la pantalla "Estamos en mantenimiento"?** El servicio o su base de datos no están respondiendo en ese momento. No se perdió nada: tus proyectos, suites, casos y defectos siguen guardados, y ninguna acción quedó a medias (si no viste la confirmación, no se guardó). La pantalla se actualiza sola y vuelve a la normalidad apenas el servicio responda; también puedes reintentar más tarde.
+
+## 5. Seguridad: tu información protegida
+
+Tu confianza es lo primero: la plataforma solo pide los datos necesarios para funcionar, los protege y no los comparte con terceros. Esto es lo que se guarda y cómo se protege.
+
+### Qué datos se guardan y dónde
 
 | Dato | Para qué se usa | Dónde se guarda | Quién lo ve |
 |---|---|---|---|
@@ -170,7 +231,7 @@ En **Defectos** cambias el estado de cada uno: **Abierto**, **En progreso** o **
 | Proyectos, suites, casos, ejecuciones y defectos | Tu trabajo de QA | MongoDB Atlas, marcados con tu cuenta | Tú y el administrador |
 | Sesión | Mantenerte conectado | Cookie en tu navegador | Firmada, invisible para JavaScript, vence a las 8 horas |
 
-## 5. Seguridad: qué se garantiza
+### Cómo se protege tu información
 
 Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias.py`,
 `routers/web_auth.py`):
@@ -192,23 +253,8 @@ Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias
 - **Secretos fuera del repositorio:** la conexión a MongoDB y la clave JWT viven en variables de
   entorno de AWS Lambda.
 
-## 6. Límites y recomendaciones
+## 6. Agradecimientos
 
-Es una demo de portafolio:
+A mi familia, por su apoyo incondicional, su paciencia y por creer en cada proyecto incluso cuando apenas era una idea. Este trabajo también es de ustedes.
 
-- No hay bloqueo por intentos fallidos ni recuperación de contraseña por correo.
-- La contraseña solo exige 8 caracteres: usa una frase larga que no uses en otros sitios.
-- No escribas datos personales o confidenciales en los casos y defectos.
-
-## 7. Preguntas frecuentes
-
-**¿De dónde salieron los proyectos que veo al entrar?** Son los proyectos de ejemplo que la
-plataforma crea al registrarte. Puedes editarlos o usarlos como plantilla.
-
-**¿Puedo borrar un proyecto?** Archivar y eliminar proyectos es una acción reservada al
-administrador, para no perder historial de pruebas por error.
-
-**¿Qué diferencia hay entre Blocked y Skipped?** *Blocked*: el caso no se pudo ejecutar por un
-impedimento (ambiente caído, dato faltante). *Skipped*: se decidió no ejecutarlo en esa ronda.
-
-**¿Qué significa la pantalla "Estamos en mantenimiento"?** El servicio o su base de datos no están respondiendo en ese momento. No se perdió nada: tus proyectos, suites, casos y defectos siguen guardados, y ninguna acción quedó a medias (si no viste la confirmación, no se guardó). La pantalla se actualiza sola y vuelve a la normalidad apenas el servicio responda; también puedes reintentar más tarde.
+Y a ti, que usas esta plataforma: cada prueba, comentario y sugerencia ayuda a que siga mejorando.
