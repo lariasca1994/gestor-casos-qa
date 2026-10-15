@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
 from app.database import asegurar_indices, verificar_conexion
 from app.dependencias import NoAutorizado, RequiereLogin, usuario_actual
@@ -27,9 +28,23 @@ templates = Jinja2Templates(directory="app/templates")
 
 @app.on_event("startup")
 def al_arrancar() -> None:
-    verificar_conexion()
-    asegurar_indices()
-    print("[GestorQA] Conexion a MongoDB verificada, indices listos.")
+    # Si MongoDB no responde al arrancar, la app arranca igual: las peticiones
+    # muestran la pantalla de mantenimiento en vez de un 502 de la plataforma.
+    try:
+        verificar_conexion()
+        asegurar_indices()
+        print("[GestorQA] Conexion a MongoDB verificada, indices listos.")
+    except (ServerSelectionTimeoutError, ConnectionFailure) as error:
+        print(f"[GestorQA] MongoDB no disponible al arrancar: {type(error).__name__}")
+
+
+@app.exception_handler(ServerSelectionTimeoutError)
+@app.exception_handler(ConnectionFailure)
+def base_no_disponible(request: Request, exc: Exception):
+    """MongoDB apagado o inalcanzable: pantalla de mantenimiento (503), no un error genérico."""
+    return templates.TemplateResponse(
+        "mantenimiento.html", {"request": request}, status_code=503, headers={"Retry-After": "300"}
+    )
 
 
 @app.exception_handler(RequiereLogin)
