@@ -131,6 +131,8 @@ form .boton { margin-top: 1rem; }
 
 .aviso { padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.9rem; }
 .aviso.error { background: var(--aviso-error-bg); border: 1px solid var(--aviso-error-borde); }
+.aviso.exito { background: #e7f6ec; border: 1px solid #9bd3ad; color: #14532d; }
+[data-tema="oscuro"] .aviso.exito { background: #163a22; border-color: #2f6b42; color: #b7f0c8; }
 
 .cabecera-seccion { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 

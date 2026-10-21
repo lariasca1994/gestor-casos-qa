@@ -28,3 +28,10 @@ COOKIE_SESION = "gestor_qa_sesion"
 ROL_QA = "QA"
 ROL_ADMIN = "ADMIN"
 ROLES_VALIDOS = (ROL_QA, ROL_ADMIN)
+
+# Recuperación de cuenta por correo (API de Brevo). Sin clave, el enlace solo se
+# escribe en el log (desarrollo). En producción llegan desde GitHub (workflow).
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
+BREVO_REMITENTE = os.getenv("BREVO_REMITENTE", "").strip()
+URL_PUBLICA = os.getenv("URL_PUBLICA", "http://127.0.0.1:8000").rstrip("/")
+RECUPERAR_MINUTOS = 30

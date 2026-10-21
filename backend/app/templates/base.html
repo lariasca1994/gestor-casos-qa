@@ -34,7 +34,8 @@
                 <a href="/admin/usuarios">Usuarios</a>
                 {% endif %}
                 <span class="rol-actual">{{ usuario.rol }}</span>
-                <a href="/logout">Salir ({{ usuario.nombre }})</a>
+                <a href="/cuenta/contrasena">Contraseña</a>
+            <a href="/logout">Salir ({{ usuario.nombre }})</a>
             {% else %}
                 <a href="/login">Ingresar</a>
                 <a href="/registro">Registrarme</a>

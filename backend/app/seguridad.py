@@ -11,6 +11,8 @@ bcrypt (rompe con un AttributeError/ValueError al arrancar). Sin esa capa
 intermedia, el problema desaparece.
 """
 
+import hashlib
+import hmac
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -60,3 +62,34 @@ def leer_token(token: str) -> dict | None:
 
 
 __all__ = ["cifrar", "verificar", "crear_token", "leer_token", "COOKIE_SESION"]
+
+
+# ── Recuperación de cuenta ─────────────────────────────────────────────────
+# Enlace firmado, con vencimiento y de un solo uso: lleva la huella de la
+# contraseña actual (al cambiarla deja de servir) y una audiencia propia, así
+# que leer_token (sesiones) lo rechaza.
+_AUDIENCIA_RECUPERAR = "recuperar"
+
+
+def _huella(hash_guardado: str) -> str:
+    return hashlib.sha256((hash_guardado or "").encode()).hexdigest()[:24]
+
+
+def crear_token_recuperacion(usuario_id: str, hash_guardado: str, minutos: int) -> str:
+    return jwt.encode(
+        {"sub": usuario_id, "h": _huella(hash_guardado), "aud": _AUDIENCIA_RECUPERAR,
+         "exp": datetime.now(timezone.utc) + timedelta(minutes=minutos)},
+        JWT_SECRET, algorithm=JWT_ALGORITMO,
+    )
+
+
+def leer_token_recuperacion(token: str) -> tuple[str, str] | None:
+    try:
+        carga = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITMO], audience=_AUDIENCIA_RECUPERAR)
+        return str(carga["sub"]), str(carga["h"])
+    except (jwt.PyJWTError, KeyError):
+        return None
+
+
+def huella_coincide(hash_guardado: str, huella: str) -> bool:
+    return hmac.compare_digest(_huella(hash_guardado), huella)

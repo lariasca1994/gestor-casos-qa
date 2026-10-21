@@ -88,3 +88,8 @@ def eliminar(usuario_id: str) -> bool:
         return resultado.deleted_count > 0
     except Exception:
         return False
+
+
+def actualizar_contrasena(usuario_id: str, contrasena: str) -> None:
+    db = obtener_db()
+    db.usuarios.update_one({"_id": ObjectId(usuario_id)}, {"$set": {"password_hash": cifrar(contrasena)}})

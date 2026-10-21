@@ -1,0 +1,16 @@
+{% extends "acceso_base.html" %}
+{% block titulo %}Nueva contraseña · Gestor QA{% endblock %}
+{% block paso %}acceso{% endblock %}
+{% block titulo_form %}Crea una nueva contraseña{% endblock %}
+{% block subtitulo %}Mínimo 8 caracteres.{% endblock %}
+{% block formulario %}
+<form method="post" action="/restablecer">
+    <input type="hidden" name="token" value="{{ token }}">
+    <label for="contrasena">Nueva contraseña</label>
+    <input type="password" id="contrasena" name="contrasena" minlength="8" autocomplete="new-password" required>
+    <label for="confirmar">Confirma la nueva contraseña</label>
+    <input type="password" id="confirmar" name="confirmar" minlength="8" autocomplete="new-password" required>
+    <button type="submit" class="boton">Guardar contraseña</button>
+</form>
+{% endblock %}
+{% block alterno %}<a href="/recuperar">Pedir otro enlace</a>{% endblock %}

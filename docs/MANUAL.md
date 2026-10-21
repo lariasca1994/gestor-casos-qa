@@ -107,6 +107,16 @@ formulario.
 
 Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos casos.
 
+### Olvidé mi contraseña
+
+En **Iniciar sesión**, pulsa **¿Olvidaste tu contraseña?** y escribe tu correo. Si la cuenta existe y
+está activa, te llega un enlace para crear una contraseña nueva (mínimo 8 caracteres). El enlace vence
+en 30 minutos y sirve una sola vez. La pantalla muestra el mismo mensaje exista o no la cuenta.
+
+### Cambiar la contraseña
+
+Con la sesión iniciada, abre **Contraseña** en el menú, escribe la actual y la nueva dos veces.
+
 ### 4.3 Proyectos
 
 ![Lista de proyectos](img/manual/03-proyectos.png)

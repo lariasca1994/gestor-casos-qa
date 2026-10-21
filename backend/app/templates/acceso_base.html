@@ -48,7 +48,7 @@
             <h1 id="titulo-acceso" class="tarjeta-titulo">{% block titulo_form %}{% endblock %}</h1>
             <p class="tarjeta-subtitulo">{% block subtitulo %}{% endblock %}</p>
 
-            {% if error %}<p class="aviso error" role="alert">{{ error }}</p>{% endif %}
+            {% if error %}<p class="aviso error" role="alert">{{ error }}</p>{% elif exito %}<p class="aviso exito" role="status">{{ exito }}</p>{% endif %}
 
             {% block formulario %}{% endblock %}
 
