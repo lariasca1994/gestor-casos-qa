@@ -146,6 +146,14 @@ backend/
 2. Escribe **Correo** y **Contraseña** y pulsa **Ingresar**.
 3. Entras a **Proyectos**, donde solo ves tus propios proyectos.
 
+**Recuperar o cambiar la contraseña**
+
+1. En el inicio de sesión pulsa **¿Olvidaste tu contraseña?** y escribe tu correo. Si la cuenta
+   existe, llega un enlace (API de Brevo) que vence en 30 minutos y sirve una sola vez; la respuesta
+   es la misma exista o no la cuenta.
+2. Con la sesión iniciada, **Contraseña** (menú superior) cambia la contraseña: pide la actual y la nueva (mínimo
+   8 caracteres).
+
 ### 5.3 Crear un proyecto
 
 1. En **Proyectos**, pulsa **+ Nuevo proyecto**.
