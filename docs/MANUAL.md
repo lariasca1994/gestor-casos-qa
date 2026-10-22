@@ -264,8 +264,9 @@ Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias
 
 - **Contraseñas con bcrypt** (12 rondas). Solo se guarda la huella.
 - **Verificación en dos pasos obligatoria** con app autenticadora (TOTP) o código por correo:
-  la clave de la app se guarda cifrada, un código no se acepta dos veces, y el código del correo
-  vence en 10 minutos, admite 5 intentos y se pueden pedir 3 cada 10 minutos.
+  la clave de la app se guarda cifrada, un código no se acepta dos veces, 5 códigos errados de la
+  app la bloquean 15 minutos, y el código del correo vence en 10 minutos, admite 5 intentos y se
+  pueden pedir 3 cada 10 minutos.
 - **Sesión con JWT en cookie `HttpOnly` y `SameSite=Lax`**, firmada con una clave secreta del
   servidor y válida por 8 horas. **Salir** la borra.
 - **Control de acceso por dueño:** cada proyecto, con todo lo que contiene, solo lo puede ver o
