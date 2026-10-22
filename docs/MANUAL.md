@@ -90,7 +90,7 @@ Qué servicio de nube, base de datos o API usa el proyecto y para qué sirve cad
 | 2 | Correo | El correo con el que vas a entrar | Formato válido y único |
 | 3 | Contraseña | Tu contraseña | Mínimo **8 caracteres** |
 | 4 | Confirmar contraseña | La misma contraseña | Debe coincidir con el campo 3 |
-| 5 | Crear cuenta | Botón | Crea la cuenta con rol **QA** y te deja con la sesión iniciada |
+| 5 | Crear cuenta | Botón | Crea la cuenta con rol **QA** y te lleva a elegir tu verificación en dos pasos |
 
 El registro siempre crea cuentas con rol QA. El rol de administrador no se puede pedir desde el
 formulario.
@@ -103,9 +103,10 @@ formulario.
 |:-:|---|---|
 | 1 | Correo | El correo de tu cuenta |
 | 2 | Contraseña | Tu contraseña |
-| 3 | Ingresar | Abre tu lista de proyectos |
+| 3 | Ingresar | Pide el código de tu verificación en dos pasos |
 
-Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos casos.
+Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos casos. Después de la
+contraseña escribe el **código de 6 dígitos** de tu método y pulsa **Verificar**.
 
 ### Olvidé mi contraseña
 
@@ -116,6 +117,20 @@ en 30 minutos y sirve una sola vez. La pantalla muestra el mismo mensaje exista 
 ### Cambiar la contraseña
 
 Con la sesión iniciada, abre **Contraseña** en el menú, escribe la actual y la nueva dos veces.
+
+### Verificación en dos pasos (obligatoria)
+
+Cada ingreso pide, además de la contraseña, un código. La primera vez que ingresas (o al crear la
+cuenta) eliges cómo recibirlo:
+
+| Método | Cómo funciona |
+|---|---|
+| **App autenticadora** (recomendado) | Escaneas un código QR con Google Authenticator, Microsoft Authenticator u otra app; desde ese momento la app muestra un código nuevo cada 30 segundos, incluso sin internet. Si no puedes escanear, escribe la clave que aparece bajo el QR. |
+| **Código por correo** | Cada vez que ingresas te llega un código de 6 dígitos que vence en 10 minutos y sirve una sola vez. |
+
+Confirma el método escribiendo el primer código. Desde **Seguridad** (menú superior) puedes
+**agregar el método que no elegiste** y escoger cuál se pide **por defecto**; tener los dos te
+permite entrar aunque no tengas el teléfono a mano.
 
 ### 4.3 Proyectos
 
@@ -239,6 +254,7 @@ Tu confianza es lo primero: la plataforma solo pide los datos necesarios para fu
 | Nombre y correo | Identificar tu cuenta | MongoDB Atlas | Tú y el administrador |
 | Contraseña | Iniciar sesión | MongoDB Atlas, **solo su huella bcrypt** | Nadie: no se puede leer ni recuperar |
 | Proyectos, suites, casos, ejecuciones y defectos | Tu trabajo de QA | MongoDB Atlas, marcados con tu cuenta | Tú y el administrador |
+| Verificación en dos pasos | Confirmar que eres tú al ingresar | MongoDB Atlas: clave de la app **cifrada** (AES-GCM) y código del correo **solo como huella** | Nadie: no se puede leer desde la base |
 | Sesión | Mantenerte conectado | Cookie en tu navegador | Firmada, invisible para JavaScript, vence a las 8 horas |
 
 ### Cómo se protege tu información
@@ -247,6 +263,9 @@ Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias
 `routers/web_auth.py`):
 
 - **Contraseñas con bcrypt** (12 rondas). Solo se guarda la huella.
+- **Verificación en dos pasos obligatoria** con app autenticadora (TOTP) o código por correo:
+  la clave de la app se guarda cifrada, un código no se acepta dos veces, y el código del correo
+  vence en 10 minutos, admite 5 intentos y se pueden pedir 3 cada 10 minutos.
 - **Sesión con JWT en cookie `HttpOnly` y `SameSite=Lax`**, firmada con una clave secreta del
   servidor y válida por 8 horas. **Salir** la borra.
 - **Control de acceso por dueño:** cada proyecto, con todo lo que contiene, solo lo puede ver o

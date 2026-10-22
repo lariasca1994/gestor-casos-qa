@@ -59,7 +59,8 @@ esa carpeta.
 
 ### Qué hace
 
-- Registro e inicio de sesión con contraseña cifrada
+- Registro e inicio de sesión con contraseña cifrada y verificación en dos pasos obligatoria
+  (app autenticadora o código por correo, a elección; el otro se agrega desde **Seguridad**)
 - Cualquier cuenta creada desde el registro crea y edita su propio trabajo
 - Proyectos, Suites de prueba y Casos de prueba, organizados jerárquicamente
 - Ejecuciones de un caso con resultado (Passed / Failed / Blocked / Skipped)
@@ -116,7 +117,9 @@ backend/
 </p>
 
 - Las páginas se generan con **Jinja2 + HTMX**; la sesión viaja en un JWT dentro
-  de una cookie httponly y las contraseñas se guardan con bcrypt.
+  de una cookie httponly y las contraseñas se guardan con bcrypt. El ingreso exige
+un segundo paso (TOTP con la clave cifrada en AES-GCM, o código por correo
+guardado solo como huella).
 - La **suite CoffeeMaker** corre en local y sus reportes se registran en la app
   como ejecuciones.
 
@@ -138,13 +141,16 @@ backend/
 
 1. En la página de inicio, pulsa **Crear cuenta**.
 2. Completa **Nombre**, **Correo**, **Contraseña** y **Confirmar contraseña**.
-3. Pulsa **Crear cuenta**. La cuenta queda lista para trabajar de inmediato.
+3. Pulsa **Crear cuenta** y elige tu verificación en dos pasos: **App autenticadora** (escanea el
+   QR y escribe el primer código) o **Código por correo**.
 
 ### 5.2 Iniciar sesión
 
 1. Pulsa **Ya tengo cuenta** (o **Ingresa** desde el registro).
 2. Escribe **Correo** y **Contraseña** y pulsa **Ingresar**.
-3. Entras a **Proyectos**, donde solo ves tus propios proyectos.
+3. Escribe el código de 6 dígitos de tu app o de tu correo y pulsa **Verificar**. En **Seguridad**
+   puedes agregar el otro método y elegir cuál se pide por defecto.
+4. Entras a **Proyectos**, donde solo ves tus propios proyectos.
 
 **Recuperar o cambiar la contraseña**
 
