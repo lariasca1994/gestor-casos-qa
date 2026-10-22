@@ -93,3 +93,8 @@ def eliminar(usuario_id: str) -> bool:
 def actualizar_contrasena(usuario_id: str, contrasena: str) -> None:
     db = obtener_db()
     db.usuarios.update_one({"_id": ObjectId(usuario_id)}, {"$set": {"password_hash": cifrar(contrasena)}})
+
+
+def actualizar_mfa(usuario_id: str, cambios: dict) -> None:
+    """Guarda campos de la verificacion en dos pasos ("mfa.<campo>": valor)."""
+    obtener_db().usuarios.update_one({"_id": ObjectId(usuario_id)}, {"$set": cambios})

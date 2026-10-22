@@ -93,3 +93,28 @@ def leer_token_recuperacion(token: str) -> tuple[str, str] | None:
 
 def huella_coincide(hash_guardado: str, huella: str) -> bool:
     return hmac.compare_digest(_huella(hash_guardado), huella)
+
+
+# ── Paso intermedio de la verificación en dos pasos ────────────────────────
+# Pase de 10 minutos entre la contraseña y el código; leer_token (sesiones) lo
+# rechaza por llevar audiencia.
+_AUDIENCIA_MFA = "mfa"
+COOKIE_MFA = "gestor_qa_mfa"
+MFA_MINUTOS = 10
+
+
+def crear_token_mfa(usuario_id: str) -> str:
+    return jwt.encode(
+        {"sub": usuario_id, "aud": _AUDIENCIA_MFA,
+         "exp": datetime.now(timezone.utc) + timedelta(minutes=MFA_MINUTOS)},
+        JWT_SECRET, algorithm=JWT_ALGORITMO,
+    )
+
+
+def leer_token_mfa(token: str | None) -> str | None:
+    if not token:
+        return None
+    try:
+        return str(jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITMO], audience=_AUDIENCIA_MFA)["sub"])
+    except (jwt.PyJWTError, KeyError):
+        return None

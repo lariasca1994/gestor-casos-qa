@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Seguridad · Gestor QA{% endblock %}
+{% block contenido %}
+<section class="cabecera-seccion">
+    <h1>Verificación en dos pasos</h1>
+</section>
+<section class="tarjeta">
+    {% if error %}<p class="aviso error" role="alert">{{ error }}</p>{% endif %}
+    {% if exito %}<p class="aviso exito" role="status">{{ exito }}</p>{% endif %}
+    <p>Cada ingreso pide, además de la contraseña, un código de uno de tus métodos.</p>
+    <ul class="mfa-metodos">
+        {% for clave, nombre in metodos.items() %}
+        <li>
+            <div>
+                <strong>{{ nombre }}</strong><br>
+                <small>{% if clave in activos %}Activa{% if clave == preferido %} · se pide por defecto{% endif %}{% else %}Sin configurar{% endif %}</small>
+            </div>
+            {% if clave not in activos %}
+            <form method="post" action="/cuenta/seguridad/agregar"><button type="submit" name="metodo" value="{{ clave }}" class="boton">Agregar</button></form>
+            {% elif clave != preferido %}
+            <form method="post" action="/cuenta/seguridad/preferido"><button type="submit" name="metodo" value="{{ clave }}" class="boton boton-secundario">Pedir este por defecto</button></form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% if accion %}
+    <h2>Agregar: {{ metodos[metodo] }}</h2>
+    {% include "_mfa_activar.html" %}
+    {% endif %}
+</section>
+{% endblock %}

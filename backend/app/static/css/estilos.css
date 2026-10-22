@@ -244,3 +244,13 @@ form .boton { margin-top: 1rem; }
 @media (max-width: 360px) {
     main { padding-inline: 0.75rem; }
 }
+
+/* Verificación en dos pasos */
+.ayuda-mfa { font-size: .88rem; opacity: .85; margin: .4rem 0 .9rem; }
+.enlace-boton { background: none; border: 0; padding: 0; margin-top: .75rem; color: var(--acento, #13795b); font-weight: 600; cursor: pointer; text-decoration: underline; }
+.mfa-qr { display: flex; justify-content: center; padding: .75rem; background: #fff; border-radius: 10px; width: fit-content; margin: 0 auto; }
+.mfa-qr svg { display: block; width: 190px; height: 190px; }
+.mfa-clave { font-family: ui-monospace, monospace; word-break: break-all; font-size: .85em; }
+.mfa-metodos { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: .75rem; }
+.mfa-metodos li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; border: 1px solid var(--borde, #d6dde3); border-radius: 10px; padding: .75rem 1rem; }
+.mfa-metodos form .boton { margin-top: 0; }
