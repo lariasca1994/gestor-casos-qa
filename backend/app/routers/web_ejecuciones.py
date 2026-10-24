@@ -33,7 +33,7 @@ def listar(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "ejecuciones/lista.html",
+        request, "ejecuciones/lista.html",
         {
             "request": request,
             "usuario": usuario,

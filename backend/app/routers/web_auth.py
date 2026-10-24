@@ -159,7 +159,7 @@ def _confirmar_metodo(request: Request, usuario: dict, metodo: str, accion: str,
     base = {"request": request, "metodo": metodo, "accion": accion, "metodos": mfa.METODOS, "email": usuario["email"]}
     if vista != "acceso":
         base.update(_contexto_seguridad(usuario))
-    return templates.TemplateResponse(plantilla, {**base, **contexto}, status_code=401 if "error" in contexto else 200)
+    return templates.TemplateResponse(request, plantilla, {**base, **contexto}, status_code=401 if "error" in contexto else 200)
 
 
 def _contexto_seguridad(usuario: dict) -> dict:

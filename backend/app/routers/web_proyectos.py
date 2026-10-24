@@ -26,7 +26,7 @@ def listar(request: Request, usuario: dict = Depends(exigir_login)):
             dueno = repo_usuarios.buscar_por_id(proyecto.get("creado_por", ""))
             proyecto["creado_por_nombre"] = dueno["nombre"] if dueno else "?"
     return templates.TemplateResponse(
-        "proyectos/lista.html",
+        request, "proyectos/lista.html",
         {
             "request": request,
             "usuario": usuario,
@@ -39,7 +39,7 @@ def listar(request: Request, usuario: dict = Depends(exigir_login)):
 @router.get("/nuevo", response_class=HTMLResponse)
 def formulario_nuevo(request: Request, usuario: dict = Depends(exigir_login)):
     return templates.TemplateResponse(
-        "proyectos/formulario.html",
+        request, "proyectos/formulario.html",
         {"request": request, "usuario": usuario, "proyecto": None, "error": None},
     )
 
@@ -53,7 +53,7 @@ def crear(
 ):
     if not nombre.strip():
         return templates.TemplateResponse(
-            "proyectos/formulario.html",
+            request, "proyectos/formulario.html",
             {
                 "request": request,
                 "usuario": usuario,
@@ -73,7 +73,7 @@ def formulario_editar(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "proyectos/formulario.html",
+        request, "proyectos/formulario.html",
         {"request": request, "usuario": usuario, "proyecto": proyecto, "error": None},
     )
 

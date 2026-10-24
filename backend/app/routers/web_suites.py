@@ -20,7 +20,7 @@ def listar(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "suites/lista.html",
+        request, "suites/lista.html",
         {
             "request": request,
             "usuario": usuario,
@@ -37,7 +37,7 @@ def formulario_nueva(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "suites/formulario.html",
+        request, "suites/formulario.html",
         {
             "request": request,
             "usuario": usuario,
@@ -59,7 +59,7 @@ def crear(
 ):
     if not nombre.strip():
         return templates.TemplateResponse(
-            "suites/formulario.html",
+            request, "suites/formulario.html",
             {
                 "request": request,
                 "usuario": usuario,
@@ -81,7 +81,7 @@ def formulario_editar(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "suites/formulario.html",
+        request, "suites/formulario.html",
         {
             "request": request,
             "usuario": usuario,

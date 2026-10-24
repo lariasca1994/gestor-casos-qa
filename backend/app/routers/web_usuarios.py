@@ -20,7 +20,7 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("", response_class=HTMLResponse)
 def listar(request: Request, usuario: dict = Depends(exigir_admin)):
     return templates.TemplateResponse(
-        "admin/usuarios.html",
+        request, "admin/usuarios.html",
         {
             "request": request,
             "usuario": usuario,

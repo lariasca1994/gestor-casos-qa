@@ -41,7 +41,7 @@ def listar(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "casos/lista.html",
+        request, "casos/lista.html",
         {
             "request": request,
             "usuario": usuario,
@@ -61,7 +61,7 @@ def formulario_nuevo(
     proyecto: dict = Depends(proyecto_autorizado),
 ):
     return templates.TemplateResponse(
-        "casos/formulario.html",
+        request, "casos/formulario.html",
         {
             "request": request,
             "usuario": usuario,
@@ -88,7 +88,7 @@ def crear(
 ):
     if not titulo.strip():
         return templates.TemplateResponse(
-            "casos/formulario.html",
+            request, "casos/formulario.html",
             {
                 "request": request,
                 "usuario": usuario,
@@ -125,7 +125,7 @@ def formulario_editar(
     caso = repo_casos.obtener(caso_id)
     pasos_texto = "\n".join(caso["pasos"]) if caso else ""
     return templates.TemplateResponse(
-        "casos/formulario.html",
+        request, "casos/formulario.html",
         {
             "request": request,
             "usuario": usuario,

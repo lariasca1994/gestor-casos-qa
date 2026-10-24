@@ -63,7 +63,7 @@ def ver(
     cobertura_total = round(total_ejecutados / total_casos * 100) if total_casos else 0
 
     return templates.TemplateResponse(
-        "proyectos/dashboard.html",
+        request, "proyectos/dashboard.html",
         {
             "request": request,
             "usuario": usuario,
