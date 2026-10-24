@@ -282,6 +282,8 @@ Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias
   código.
 - **Secretos fuera del repositorio:** la conexión a MongoDB y la clave JWT viven en variables de
   entorno de AWS Lambda.
+- **Al día en seguridad:** el runtime, el sistema y las dependencias se mantienen con los últimos
+  parches y se revisan periódicamente.
 
 ## 6. Agradecimientos
 

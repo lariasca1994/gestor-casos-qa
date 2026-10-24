@@ -220,7 +220,7 @@ Si la API o la base de datos (MongoDB Atlas) no responden, la aplicación muestr
 
 ## 6. Instalación para pruebas
 
-Requisitos: Python 3.11+ y una base MongoDB accesible (por ejemplo, Atlas).
+Requisitos: Python 3.12.15+ y una base MongoDB accesible (por ejemplo, Atlas).
 
 ```bash
 cd backend
