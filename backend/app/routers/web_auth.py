@@ -41,8 +41,7 @@ templates = Jinja2Templates(directory="app/templates")
 def formulario_registro(request: Request):
     if usuario_actual(request):
         return RedirectResponse(url="/proyectos", status_code=303)
-    return templates.TemplateResponse(
-        "registro.html", {"request": request, "error": None}
+    return templates.TemplateResponse(request, "registro.html", {"request": request, "error": None}
     )
 
 
@@ -63,8 +62,7 @@ def procesar_registro(
         error = "Ya existe una cuenta con ese correo."
 
     if error:
-        return templates.TemplateResponse(
-            "registro.html",
+        return templates.TemplateResponse(request, "registro.html",
             {"request": request, "error": error},
             status_code=400,
         )
@@ -81,22 +79,20 @@ def procesar_registro(
 def formulario_login(request: Request):
     if usuario_actual(request):
         return RedirectResponse(url="/proyectos", status_code=303)
-    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+    return templates.TemplateResponse(request, "login.html", {"request": request, "error": None})
 
 
 @router.post("/login", response_class=HTMLResponse)
 def procesar_login(request: Request, email: str = Form(...), contrasena: str = Form(...)):
     usuario = buscar_por_correo(email)
     if not usuario or not verificar(contrasena, usuario["password_hash"]):
-        return templates.TemplateResponse(
-            "login.html",
+        return templates.TemplateResponse(request, "login.html",
             {"request": request, "error": "Correo o contrasena incorrectos."},
             status_code=400,
         )
 
     if not usuario.get("activo", True):
-        return templates.TemplateResponse(
-            "login.html", {"request": request, "error": "Esta cuenta está suspendida."}, status_code=403
+        return templates.TemplateResponse(request, "login.html", {"request": request, "error": "Esta cuenta está suspendida."}, status_code=403
         )
     # La contraseña sola no abre sesión: falta el segundo paso.
     if mfa.preferido(usuario) == "correo":
@@ -140,12 +136,10 @@ def _vencido() -> RedirectResponse:
 
 def _pantalla_mfa(request: Request, usuario: dict, metodo: str | None = None, status_code: int = 200, **contexto):
     if not mfa.configurado(usuario):
-        return templates.TemplateResponse(
-            "mfa_elegir.html", {"request": request, "metodos": mfa.METODOS, **contexto}, status_code=status_code)
+        return templates.TemplateResponse(request, "mfa_elegir.html", {"request": request, "metodos": mfa.METODOS, **contexto}, status_code=status_code)
     metodo = metodo if metodo in mfa.metodos_activos(usuario) else mfa.preferido(usuario)
     otros = [m for m in mfa.metodos_activos(usuario) if m != metodo]
-    return templates.TemplateResponse(
-        "mfa_verificar.html",
+    return templates.TemplateResponse(request, "mfa_verificar.html",
         {"request": request, "metodo": metodo, "otro": otros[0] if otros else None, "metodos": mfa.METODOS,
          "email": usuario["email"], **contexto},
         status_code=status_code,
@@ -222,8 +216,7 @@ def activar_metodo(request: Request, metodo: str = Form(...), codigo: str = Form
 
 @router.get("/cuenta/seguridad", response_class=HTMLResponse)
 def form_seguridad(request: Request, usuario: dict = Depends(exigir_login)):
-    return templates.TemplateResponse(
-        "cuenta_seguridad.html", {"request": request, "metodos": mfa.METODOS, **_contexto_seguridad(usuario)})
+    return templates.TemplateResponse(request, "cuenta_seguridad.html", {"request": request, "metodos": mfa.METODOS, **_contexto_seguridad(usuario)})
 
 
 @router.post("/cuenta/seguridad/agregar", response_class=HTMLResponse)
@@ -240,7 +233,7 @@ def activar_en_perfil(request: Request, metodo: str = Form(...), codigo: str = F
     if not activado:
         return _confirmar_metodo(request, usuario, metodo, "/cuenta/seguridad/activar", "cuenta",
                                  error="El código no es correcto o ya venció.")
-    return templates.TemplateResponse("cuenta_seguridad.html", {
+    return templates.TemplateResponse(request, "cuenta_seguridad.html", {
         "request": request, "metodos": mfa.METODOS, **_contexto_seguridad(usuario),
         "exito": f"{mfa.METODOS[metodo]} quedó activada como segundo paso.",
     })
@@ -280,7 +273,7 @@ def _puede_enviar(email: str) -> bool:
 
 @router.get("/recuperar", response_class=HTMLResponse)
 def formulario_recuperar(request: Request):
-    return templates.TemplateResponse("recuperar.html", {"request": request, "error": None})
+    return templates.TemplateResponse(request, "recuperar.html", {"request": request, "error": None})
 
 
 @router.post("/recuperar", response_class=HTMLResponse)
@@ -301,15 +294,14 @@ def procesar_recuperar(request: Request, email: str = Form(...)):
             f'text-decoration:none">Crear contraseña nueva</a></p><p>El enlace vence en {RECUPERAR_MINUTOS} '
             "minutos y sirve una sola vez. Si no fuiste tú, ignora este correo.</p>",
         )
-    return templates.TemplateResponse(
-        "recuperar.html", {"request": request, "error": None, "exito": _RESPUESTA_RECUPERAR}
+    return templates.TemplateResponse(request, "recuperar.html", {"request": request, "error": None, "exito": _RESPUESTA_RECUPERAR}
     )
 
 
 @router.get("/restablecer", response_class=HTMLResponse)
 def formulario_restablecer(request: Request, token: str = ""):
     error = None if leer_token_recuperacion(token) else "El enlace no es válido o ya venció. Pide uno nuevo."
-    return templates.TemplateResponse("restablecer.html", {"request": request, "token": token, "error": error})
+    return templates.TemplateResponse(request, "restablecer.html", {"request": request, "token": token, "error": error})
 
 
 @router.post("/restablecer", response_class=HTMLResponse)
@@ -329,20 +321,17 @@ def procesar_restablecer(
     elif len(contrasena) < 8:
         error = "La contrasena debe tener al menos 8 caracteres."
     if error:
-        return templates.TemplateResponse(
-            "restablecer.html", {"request": request, "token": token, "error": error}, status_code=400
+        return templates.TemplateResponse(request, "restablecer.html", {"request": request, "token": token, "error": error}, status_code=400
         )
     actualizar_contrasena(str(usuario["_id"]), contrasena)
-    return templates.TemplateResponse(
-        "login.html",
+    return templates.TemplateResponse(request, "login.html",
         {"request": request, "error": None, "exito": "Tu contraseña quedó actualizada. Ya puedes ingresar."},
     )
 
 
 @router.get("/cuenta/contrasena", response_class=HTMLResponse)
 def formulario_cambiar_contrasena(request: Request, usuario: dict = Depends(exigir_login)):
-    return templates.TemplateResponse(
-        "cuenta_contrasena.html", {"request": request, "usuario": usuario, "error": None}
+    return templates.TemplateResponse(request, "cuenta_contrasena.html", {"request": request, "usuario": usuario, "error": None}
     )
 
 
@@ -364,11 +353,9 @@ def cambiar_contrasena(
     elif contrasena == actual:
         error = "La contraseña nueva debe ser distinta de la actual."
     if error:
-        return templates.TemplateResponse(
-            "cuenta_contrasena.html", {"request": request, "usuario": usuario, "error": error}, status_code=400
+        return templates.TemplateResponse(request, "cuenta_contrasena.html", {"request": request, "usuario": usuario, "error": error}, status_code=400
         )
     actualizar_contrasena(str(usuario["_id"]), contrasena)
-    return templates.TemplateResponse(
-        "cuenta_contrasena.html",
+    return templates.TemplateResponse(request, "cuenta_contrasena.html",
         {"request": request, "usuario": usuario, "error": None, "exito": "Tu contraseña quedó actualizada."},
     )

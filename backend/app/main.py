@@ -42,8 +42,7 @@ def al_arrancar() -> None:
 @app.exception_handler(ConnectionFailure)
 def base_no_disponible(request: Request, exc: Exception):
     """MongoDB apagado o inalcanzable: pantalla de mantenimiento (503), no un error genérico."""
-    return templates.TemplateResponse(
-        "mantenimiento.html", {"request": request}, status_code=503, headers={"Retry-After": "300"}
+    return templates.TemplateResponse(request, "mantenimiento.html", {"request": request}, status_code=503, headers={"Retry-After": "300"}
     )
 
 
@@ -67,7 +66,7 @@ def inicio(request: Request):
     # del portafolio; con sesion abierta se va directo a los proyectos.
     if usuario_actual(request):
         return RedirectResponse(url="/proyectos", status_code=303)
-    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+    return templates.TemplateResponse(request, "login.html", {"request": request, "error": None})
 
 
 @app.get("/favicon.ico", include_in_schema=False)
