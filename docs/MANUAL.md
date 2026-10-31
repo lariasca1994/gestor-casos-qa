@@ -39,7 +39,6 @@ cobertura en un tablero.
 
 Es una demo de portafolio:
 
-- No hay bloqueo por intentos fallidos ni recuperación de contraseña por correo.
 - La contraseña solo exige 8 caracteres: usa una frase larga que no uses en otros sitios.
 - No escribas datos personales o confidenciales en los casos y defectos.
 
@@ -262,13 +261,11 @@ Tu confianza es lo primero: la plataforma solo pide los datos necesarios para fu
 Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias.py`,
 `routers/web_auth.py`):
 
-- **Contraseñas con bcrypt** (12 rondas). Solo se guarda la huella.
+- **Contraseñas protegidas con hash.** Solo se guarda la huella.
 - **Verificación en dos pasos obligatoria** con app autenticadora (TOTP) o código por correo:
-  la clave de la app se guarda cifrada, un código no se acepta dos veces, 5 códigos errados de la
-  app la bloquean 15 minutos, y el código del correo vence en 10 minutos, admite 5 intentos y se
-  pueden pedir 3 cada 10 minutos.
-- **Sesión con JWT en cookie `HttpOnly` y `SameSite=Lax`**, firmada con una clave secreta del
-  servidor y válida por 8 horas. **Salir** la borra.
+  la clave de la app se guarda cifrada, un código no se acepta dos veces, los intentos errados
+  bloquean temporalmente y el código del correo vence en pocos minutos.
+- **Sesión en una cookie segura** que vence sola. **Salir** la borra.
 - **Control de acceso por dueño:** cada proyecto, con todo lo que contiene, solo lo puede ver o
   editar quien lo creó o un administrador. Cambiar el identificador en la URL no da acceso a
   proyectos ajenos.
