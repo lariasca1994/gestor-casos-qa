@@ -251,10 +251,10 @@ Tu confianza es lo primero: la plataforma solo pide los datos necesarios para fu
 | Dato | Para qué se usa | Dónde se guarda | Quién lo ve |
 |---|---|---|---|
 | Nombre y correo | Identificar tu cuenta | MongoDB Atlas | Tú y el administrador |
-| Contraseña | Iniciar sesión | MongoDB Atlas, **solo su huella bcrypt** | Nadie: no se puede leer ni recuperar |
+| Contraseña | Iniciar sesión | MongoDB Atlas, **solo su huella** | Nadie: no se puede leer ni recuperar |
 | Proyectos, suites, casos, ejecuciones y defectos | Tu trabajo de QA | MongoDB Atlas, marcados con tu cuenta | Tú y el administrador |
-| Verificación en dos pasos | Confirmar que eres tú al ingresar | MongoDB Atlas: clave de la app **cifrada** (AES-GCM) y código del correo **solo como huella** | Nadie: no se puede leer desde la base |
-| Sesión | Mantenerte conectado | Cookie en tu navegador | Firmada, invisible para JavaScript, vence a las 8 horas |
+| Verificación en dos pasos | Confirmar que eres tú al ingresar | MongoDB Atlas: clave de la app **cifrada** y código del correo **solo como huella** | Nadie: no se puede leer desde la base |
+| Sesión | Mantenerte conectado | Cookie en tu navegador | Firmada, invisible para JavaScript; vence sola |
 
 ### Cómo se protege tu información
 

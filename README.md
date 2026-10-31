@@ -77,7 +77,7 @@ esa carpeta.
 | Interfaz | Jinja2, HTMX |
 | Base de datos | MongoDB |
 | Sesiones | JWT en cookie httponly |
-| Contraseñas | bcrypt |
+| Contraseñas | Hash con sal |
 
 ---
 
@@ -119,8 +119,8 @@ backend/
 </p>
 
 - Las páginas se generan con **Jinja2 + HTMX**; la sesión viaja en un JWT dentro
-  de una cookie httponly y las contraseñas se guardan con bcrypt. El ingreso exige
-un segundo paso (TOTP con la clave cifrada en AES-GCM, o código por correo
+  de una cookie httponly y las contraseñas se guardan solo como huella. El ingreso exige
+un segundo paso (TOTP con la clave cifrada, o código por correo
 guardado solo como huella).
 - La **suite CoffeeMaker** corre en local y sus reportes se registran en la app
   como ejecuciones.
