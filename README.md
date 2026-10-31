@@ -61,6 +61,8 @@ esa carpeta.
 
 - Registro e inicio de sesión con contraseña cifrada y verificación en dos pasos obligatoria
   (app autenticadora o código por correo, a elección; el otro se agrega desde **Seguridad**)
+- Bloqueo temporal ante intentos fallidos repetidos y registro de eventos de seguridad (ingresos,
+  intentos fallidos, bloqueos y cambios de contraseña)
 - Cualquier cuenta creada desde el registro crea y edita su propio trabajo
 - Proyectos, Suites de prueba y Casos de prueba, organizados jerárquicamente
 - Ejecuciones de un caso con resultado (Passed / Failed / Blocked / Skipped)

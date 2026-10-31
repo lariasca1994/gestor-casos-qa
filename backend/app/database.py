@@ -28,3 +28,6 @@ def asegurar_indices() -> None:
     db.casos_prueba.create_index([("proyecto_id", ASCENDING)])
     db.ejecuciones.create_index([("caso_id", ASCENDING)])
     db.defectos.create_index([("ejecucion_id", ASCENDING)])
+    # Eventos de seguridad: se borran solos a los 15 dias.
+    db.eventos_seguridad.create_index([("fecha", ASCENDING)], expireAfterSeconds=15 * 24 * 3600)
+    db.eventos_seguridad.create_index([("usuario_id", ASCENDING)])

@@ -16,7 +16,7 @@ import time
 
 from fastapi import Depends
 
-from app import correo, mfa
+from app import auditoria, correo, mfa
 from app.config import COOKIE_SESION, RECUPERAR_MINUTOS, SESION_HORAS, URL_PUBLICA
 from app.datos_ejemplo import crear_proyectos_ejemplo
 from app.dependencias import exigir_login, usuario_actual
@@ -85,11 +85,17 @@ def formulario_login(request: Request):
 @router.post("/login", response_class=HTMLResponse)
 def procesar_login(request: Request, email: str = Form(...), contrasena: str = Form(...)):
     usuario = buscar_por_correo(email)
+    if usuario and mfa.clave_bloqueada(usuario):
+        return templates.TemplateResponse(request, "login.html",
+            {"request": request, "error": mfa.MENSAJE_BLOQUEO}, status_code=429)
     if not usuario or not verificar(contrasena, usuario["password_hash"]):
+        if usuario:
+            mfa.fallo_de_clave(usuario)
         return templates.TemplateResponse(request, "login.html",
             {"request": request, "error": "Correo o contrasena incorrectos."},
             status_code=400,
         )
+    mfa.clave_correcta(usuario)
 
     if not usuario.get("activo", True):
         return templates.TemplateResponse(request, "login.html", {"request": request, "error": "Esta cuenta está suspendida."}, status_code=403
@@ -283,6 +289,7 @@ def procesar_recuperar(request: Request, email: str = Form(...)):
     if usuario and usuario.get("activo", True) and _puede_enviar(email):
         token = crear_token_recuperacion(str(usuario["_id"]), usuario["password_hash"], RECUPERAR_MINUTOS)
         enlace = f"{URL_PUBLICA}/restablecer?token={token}"
+        auditoria.registrar(auditoria.RECUPERACION, usuario)
         nombre = usuario.get("nombre", "")
         correo.enviar(
             usuario["email"], nombre, "Restablece tu contraseña · Gestor QA",
@@ -324,6 +331,7 @@ def procesar_restablecer(
         return templates.TemplateResponse(request, "restablecer.html", {"request": request, "token": token, "error": error}, status_code=400
         )
     actualizar_contrasena(str(usuario["_id"]), contrasena)
+    mfa.clave_restablecida(usuario)
     return templates.TemplateResponse(request, "login.html",
         {"request": request, "error": None, "exito": "Tu contraseña quedó actualizada. Ya puedes ingresar."},
     )
@@ -356,6 +364,7 @@ def cambiar_contrasena(
         return templates.TemplateResponse(request, "cuenta_contrasena.html", {"request": request, "usuario": usuario, "error": error}, status_code=400
         )
     actualizar_contrasena(str(usuario["_id"]), contrasena)
+    mfa.clave_restablecida(usuario)
     return templates.TemplateResponse(request, "cuenta_contrasena.html",
         {"request": request, "usuario": usuario, "error": None, "exito": "Tu contraseña quedó actualizada."},
     )
