@@ -3,13 +3,44 @@
 Sin BREVO_API_KEY (desarrollo) no envía nada: escribe el mensaje en el log.
 """
 
+import html
 import json
 import logging
 import urllib.request
 
-from app.config import BREVO_API_KEY, BREVO_REMITENTE
+from app.config import BREVO_API_KEY, BREVO_REMITENTE, URL_PUBLICA
 
 logger = logging.getLogger("gestor_qa.correo")
+
+
+# Paleta del sitio (static/css/acceso.css): el correo se ve como la aplicación.
+_C = {
+    "fondo": "#F5F7F6", "superficie": "#FFFFFF", "borde": "#DCE4E0", "texto": "#1F2430",
+    "suave": "#5A6072", "acento": "#157F52", "cabecera": "#EAF4EE", "cabecera_texto": "#10291E",
+}
+_FUENTE = "Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif"
+
+
+def documento(asunto: str, contenido: str) -> str:
+    """Envuelve el contenido del correo con la cabecera, el logo y los colores del sitio."""
+    c = _C
+    return (
+        '<!doctype html><html lang="es"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f"<title>{html.escape(asunto)}</title></head>"
+        f'<body style="margin:0;padding:0;background:{c["fondo"]};">'
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:{c["fondo"]};padding:24px 12px;"><tr><td align="center">'
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:{c["superficie"]};'
+        f'border:1px solid {c["borde"]};border-radius:12px;overflow:hidden;font-family:{_FUENTE};color:{c["texto"]};">'
+        f'<tr><td style="background:{c["cabecera"]};border-top:4px solid {c["acento"]};padding:16px 28px;">'
+        f'<img src="{URL_PUBLICA}/static/iconos/apple-touch-icon.png" width="28" height="28" alt="" '
+        'style="vertical-align:middle;border:0;border-radius:6px;margin-right:10px;">'
+        f'<span style="vertical-align:middle;font-size:17px;font-weight:700;color:{c["cabecera_texto"]};">Gestor QA</span></td></tr>'
+        f'<tr><td style="padding:24px 28px 12px;font-size:15px;line-height:1.6;color:{c["texto"]};">{contenido}</td></tr>'
+        f'<tr><td style="padding:16px 28px 22px;border-top:1px solid {c["borde"]};font-size:12px;line-height:1.5;color:{c["suave"]};">'
+        "Correo automático de Gestor QA. Si no esperabas este mensaje, puedes ignorarlo.</td></tr>"
+        "</table></td></tr></table></body></html>"
+    )
 
 
 def enviar(destino: str, nombre: str, asunto: str, texto: str, html: str) -> bool:
@@ -21,7 +52,7 @@ def enviar(destino: str, nombre: str, asunto: str, texto: str, html: str) -> boo
         "to": [{"email": destino, "name": nombre}],
         "subject": asunto,
         "textContent": texto,
-        "htmlContent": html,
+        "htmlContent": documento(asunto, html),
     }).encode("utf-8")
     pedido = urllib.request.Request(
         "https://api.brevo.com/v3/smtp/email",
