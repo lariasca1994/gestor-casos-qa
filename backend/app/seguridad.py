@@ -38,13 +38,16 @@ def verificar(contrasena: str, hash_guardado: str) -> bool:
         return False
 
 
-def crear_token(usuario_id: str, email: str, rol: str) -> str:
+def crear_token(usuario_id: str, email: str, rol: str, hash_guardado: str) -> str:
+    """La sesion lleva la huella de la contrasena: al cambiarla o restablecerla,
+    todas las sesiones abiertas con la anterior dejan de valer."""
     ahora = datetime.now(timezone.utc)
     return jwt.encode(
         {
             "sub": usuario_id,
             "email": email,
             "rol": rol,
+            "h": _huella(hash_guardado),
             "iat": int(ahora.timestamp()),
             "exp": ahora + timedelta(hours=SESION_HORAS),
         },
@@ -97,24 +100,28 @@ def huella_coincide(hash_guardado: str, huella: str) -> bool:
 
 # ── Paso intermedio de la verificación en dos pasos ────────────────────────
 # Pase de 10 minutos entre la contraseña y el código; leer_token (sesiones) lo
-# rechaza por llevar audiencia.
+# rechaza por llevar audiencia. Lleva la huella de la contraseña (al cambiarla
+# deja de servir) y "rec" cuando ya se validó el código de "Perdí mi
+# autenticador": ese pase solo sirve para activar la app nueva.
 _AUDIENCIA_MFA = "mfa"
 COOKIE_MFA = "gestor_qa_mfa"
 MFA_MINUTOS = 10
 
 
-def crear_token_mfa(usuario_id: str) -> str:
+def crear_token_mfa(usuario_id: str, hash_guardado: str, recuperado: bool = False) -> str:
     return jwt.encode(
-        {"sub": usuario_id, "aud": _AUDIENCIA_MFA,
+        {"sub": usuario_id, "h": _huella(hash_guardado), "rec": recuperado, "aud": _AUDIENCIA_MFA,
          "exp": datetime.now(timezone.utc) + timedelta(minutes=MFA_MINUTOS)},
         JWT_SECRET, algorithm=JWT_ALGORITMO,
     )
 
 
-def leer_token_mfa(token: str | None) -> str | None:
+def leer_token_mfa(token: str | None) -> dict | None:
+    """Devuelve {"sub", "h", "rec"} si el pase es valido, si no None."""
     if not token:
         return None
     try:
-        return str(jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITMO], audience=_AUDIENCIA_MFA)["sub"])
+        carga = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITMO], audience=_AUDIENCIA_MFA)
+        return {"sub": str(carga["sub"]), "h": str(carga["h"]), "rec": bool(carga.get("rec"))}
     except (jwt.PyJWTError, KeyError):
         return None

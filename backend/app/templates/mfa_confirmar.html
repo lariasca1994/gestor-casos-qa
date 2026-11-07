@@ -1,9 +1,9 @@
 {% extends "acceso_base.html" %}
-{% block titulo %}Verificación en dos pasos · Gestor QA{% endblock %}
+{% block titulo %}Verificación en dos pasos · Gestor de casos de prueba QA{% endblock %}
 {% block paso %}un paso más{% endblock %}
-{% block titulo_form %}{{ metodos[metodo] }}{% endblock %}
-{% block subtitulo %}Confirma el método con un código para terminar de ingresar.{% endblock %}
+{% block titulo_form %}{% if reemplazo %}Configura tu app autenticadora nueva{% else %}{{ metodos[metodo] }}{% endif %}{% endblock %}
+{% block subtitulo %}{% if reemplazo %}Tu correo quedó verificado. La app anterior deja de funcionar cuando confirmes la nueva.{% else %}Confirma el método con un código para terminar de ingresar.{% endif %}{% endblock %}
 {% block formulario %}
 {% include "_mfa_activar.html" %}
 {% endblock %}
-{% block alterno %}<a href="/verificacion">Elegir otro método</a>{% endblock %}
+{% block alterno %}{% if reemplazo %}<a href="/login">Cancelar y volver a iniciar sesión</a>{% else %}<a href="/verificacion">Elegir otro método</a>{% endif %}{% endblock %}

@@ -20,7 +20,7 @@ from app.routers import (
     web_usuarios,
 )
 
-app = FastAPI(title="Gestor de Casos de Prueba QA")
+app = FastAPI(title="Gestor de casos de prueba QA")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")

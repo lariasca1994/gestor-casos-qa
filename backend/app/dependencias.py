@@ -5,7 +5,7 @@ from fastapi import Depends, Request
 
 from app.config import COOKIE_SESION, ROL_ADMIN
 from app.repositorios.usuarios import buscar_por_id
-from app.seguridad import leer_token
+from app.seguridad import huella_coincide, leer_token
 
 
 class RequiereLogin(Exception):
@@ -30,6 +30,9 @@ def usuario_actual(request: Request) -> dict | None:
         return None
     usuario = buscar_por_id(carga["sub"])
     if usuario is None or not usuario.get("activo", True):
+        return None
+    # Sesion abierta con una contrasena que ya cambio: queda cerrada.
+    if not huella_coincide(usuario.get("password_hash", ""), str(carga.get("h", ""))):
         return None
     return usuario
 

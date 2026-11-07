@@ -40,6 +40,13 @@ jobs:
         with:
           python-version: '3.12'
 
+      # Si alguna prueba falla, no se despliega nada.
+      - name: Pruebas automáticas
+        working-directory: backend
+        run: |
+          pip install --quiet -r requirements.txt pytest httpx
+          python -m pytest tests -q
+
       - name: Armar el paquete
         working-directory: backend
         run: |

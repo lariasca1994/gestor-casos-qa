@@ -1,0 +1,14 @@
+{% extends "acceso_base.html" %}
+{% block titulo %}Perdí mi autenticador · Gestor de casos de prueba QA{% endblock %}
+{% block paso %}un paso más{% endblock %}
+{% block titulo_form %}Recupera tu acceso{% endblock %}
+{% block subtitulo %}Escribe el código de 6 dígitos que enviamos a {{ email }}. Vence en 15 minutos. Después configurarás tu app autenticadora nueva.{% endblock %}
+{% block formulario %}
+<form method="post" action="/verificacion/recuperar">
+    <label for="codigo">Código del correo</label>
+    <input type="text" id="codigo" name="codigo" required inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" autocomplete="one-time-code" autofocus>
+    <button type="submit" class="boton">Continuar</button>
+</form>
+<form method="post" action="/verificacion/perdi-autenticador"><button type="submit" class="enlace-boton">Enviar otro código</button></form>
+{% endblock %}
+{% block alterno %}<a href="/verificacion">Volver</a>{% endblock %}
