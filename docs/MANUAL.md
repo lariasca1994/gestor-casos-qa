@@ -3,7 +3,7 @@
 Guía para usar la plataforma paso a paso: qué significa cada campo, qué datos se ingresan y qué
 protege la plataforma. Para la parte técnica vuelve al [README](../README.md).
 
-**Demo:** [Gestor QA (AWS Lambda)](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
+**Demo:** [Gestor de casos de prueba QA (AWS Lambda)](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
 
 ## Contenido
 
@@ -113,9 +113,30 @@ En **Iniciar sesión**, pulsa **¿Olvidaste tu contraseña?** y escribe tu corre
 está activa, te llega un enlace para crear una contraseña nueva (mínimo 8 caracteres). El enlace vence
 en 30 minutos y sirve una sola vez. La pantalla muestra el mismo mensaje exista o no la cuenta.
 
+El enlace abre una pantalla con solo dos campos: **Nueva contraseña** y **Confirma la nueva
+contraseña**. Al guardarla se **cierran todas las sesiones abiertas** (en cualquier equipo) y tu
+verificación en dos pasos **sigue activa**: el siguiente ingreso pide la contraseña nueva y tu código.
+
+### Perdí mi autenticador
+
+Si cambiaste de teléfono o borraste la app autenticadora:
+
+1. Ingresa tu correo y contraseña como siempre.
+2. En la pantalla **Escribe tu código**, pulsa **Perdí mi autenticador** (siempre está visible).
+3. Te llega un código de 6 dígitos **al correo de tu cuenta**, aunque no hayas activado el método por
+   correo. Vence en 15 minutos; si no llega, pulsa **Enviar otro código** (hay un límite de envíos).
+4. Escribe el código y pulsa **Continuar**. Si te equivocas varias veces seguidas, la recuperación se
+   bloquea unos minutos.
+5. Escanea el QR nuevo con tu app y escribe el código que muestra. Al pulsar **Activar** entras a la
+   plataforma.
+
+La app anterior sigue siendo la válida hasta que confirmes la nueva, y acertar el código del correo
+no abre la sesión por sí solo: hay que terminar de configurar la app nueva.
+
 ### Cambiar la contraseña
 
-Con la sesión iniciada, abre **Contraseña** en el menú, escribe la actual y la nueva dos veces.
+Con la sesión iniciada, abre **Contraseña** en el menú, escribe la actual y la nueva dos veces. Las
+demás sesiones abiertas se cierran; la del equipo donde la cambiaste continúa.
 
 ### Verificación en dos pasos (obligatoria)
 
@@ -265,7 +286,11 @@ Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias
 - **Verificación en dos pasos obligatoria** con app autenticadora (TOTP) o código por correo:
   la clave de la app se guarda cifrada, un código no se acepta dos veces, los intentos errados
   bloquean temporalmente y el código del correo vence en pocos minutos.
-- **Sesión en una cookie segura** que vence sola. **Salir** la borra.
+- **Sesión en una cookie segura** que vence sola. **Salir** la borra, y cambiar o restablecer la
+  contraseña cierra las sesiones abiertas con la anterior.
+- **Recuperación sin atajos:** el enlace de "Olvidé mi contraseña" sirve una sola vez y vence; la
+  respuesta no revela si un correo tiene cuenta. "Perdí mi autenticador" exige la contraseña y un
+  código enviado al correo de la cuenta, y solo reemplaza la app cuando la nueva queda confirmada.
 - **Control de acceso por dueño:** cada proyecto, con todo lo que contiene, solo lo puede ver o
   editar quien lo creó o un administrador. Cambiar el identificador en la URL no da acceso a
   proyectos ajenos.

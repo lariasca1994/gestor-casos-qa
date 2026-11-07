@@ -61,6 +61,9 @@ esa carpeta.
 
 - Registro e inicio de sesión con contraseña cifrada y verificación en dos pasos obligatoria
   (app autenticadora o código por correo, a elección; el otro se agrega desde **Seguridad**)
+- Recuperación de la cuenta por correo: **Olvidé mi contraseña** (enlace de un solo uso; al cambiarla
+  se cierran las sesiones abiertas y la verificación en dos pasos sigue activa) y **Perdí mi
+  autenticador** (código al correo de la cuenta y configuración obligatoria de una app nueva)
 - Bloqueo temporal ante intentos fallidos repetidos y registro de eventos de seguridad (ingresos,
   intentos fallidos, bloqueos y cambios de contraseña)
 - Cualquier cuenta creada desde el registro crea y edita su propio trabajo
@@ -97,11 +100,13 @@ Detalle de `backend/`:
 ```
 backend/
 ├── requirements.txt
+├── tests/                   Pruebas de la recuperación de cuenta (pytest)
 └── app/
     ├── main.py              Punto de entrada, monta rutas y estáticos
     ├── config.py            Carga del .env
     ├── database.py          Conexión a Mongo e índices
     ├── seguridad.py         Hasheo de contraseñas y sesiones (JWT)
+    ├── mfa.py               Verificación en dos pasos y "Perdí mi autenticador"
     ├── dependencias.py      Identificación del usuario y control de acceso
     ├── repositorios/        Acceso a datos por colección
     ├── routers/             Páginas web por sección
@@ -151,16 +156,20 @@ guardado solo como huella).
 1. Pulsa **Ya tengo cuenta** (o **Ingresa** desde el registro).
 2. Escribe **Correo** y **Contraseña** y pulsa **Ingresar**.
 3. Escribe el código de 6 dígitos de tu app o de tu correo y pulsa **Verificar**. En **Seguridad**
-   puedes agregar el otro método y elegir cuál se pide por defecto.
+   puedes agregar el otro método y elegir cuál se pide por defecto. Si ya no tienes la app, pulsa
+   **Perdí mi autenticador**: llega un código al correo de la cuenta (vence en 15 minutos) y, al
+   escribirlo, configuras una app autenticadora nueva; la anterior deja de servir solo cuando
+   confirmas la nueva, y la sesión se abre recién en ese momento.
 4. Entras a **Proyectos**, donde solo ves tus propios proyectos.
 
 **Recuperar o cambiar la contraseña**
 
 1. En el inicio de sesión pulsa **¿Olvidaste tu contraseña?** y escribe tu correo. Si la cuenta
    existe, llega un enlace (API de Brevo) que vence en 30 minutos y sirve una sola vez; la respuesta
-   es la misma exista o no la cuenta.
+   es la misma exista o no la cuenta. El enlace solo pide la contraseña nueva y su confirmación. Al
+   guardarla se cierran todas las sesiones abiertas y la verificación en dos pasos sigue activa.
 2. Con la sesión iniciada, **Contraseña** (menú superior) cambia la contraseña: pide la actual y la nueva (mínimo
-   8 caracteres).
+   8 caracteres). Las demás sesiones abiertas se cierran; la actual continúa.
 
 ### 5.3 Crear un proyecto
 
@@ -244,13 +253,22 @@ uvicorn app.main:app --reload
 
 Queda en `http://127.0.0.1:8000`. Crea tu cuenta desde `/registro`.
 
+Pruebas automáticas (no necesitan MongoDB: la colección de usuarios se simula en memoria):
+
+```bash
+cd backend
+pip install pytest httpx
+python -m pytest tests
+```
+
 ### Despliegue
 
 Aplicación sin estado propio en disco (todo vive en MongoDB), así que corre
 igual en cualquier hospedaje con soporte para Python. La instancia pública
 corre en AWS Lambda (Function URL, sin API Gateway) mediante el adaptador
 `mangum`, con MongoDB Atlas como base de datos. Solo hay que definir
-`MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio.
+`MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio. Cada push a `main` corre
+primero las pruebas automáticas y, si pasan, actualiza la función.
 
 ---
 
