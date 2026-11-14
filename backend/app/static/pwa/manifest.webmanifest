@@ -1,0 +1,20 @@
+{
+  "name": "Gestor de casos de prueba QA",
+  "short_name": "Gestor QA",
+  "description": "Proyectos, suites, casos de prueba, ejecuciones y defectos en un solo lugar.",
+  "lang": "es",
+  "start_url": "/proyectos?origen=app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0F2219",
+  "theme_color": "#157F52",
+  "icons": [
+    { "src": "/static/iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/static/iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/static/iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/static/iconos/icono.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Proyectos", "url": "/proyectos", "icons": [{ "src": "/static/iconos/icono-192.png", "sizes": "192x192" }] }
+  ]
+}

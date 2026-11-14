@@ -1,32 +1,79 @@
 {% extends "base.html" %}
 {% block titulo %}Dashboard de {{ proyecto.nombre }}{% endblock %}
 {% block contenido %}
+{% set total_defectos = defectos_abiertos.values() | sum %}
+{% set fallidos = conteo_resultados.get("Failed", 0) + conteo_resultados.get("Blocked", 0) %}
+{% set aprobados = conteo_resultados.get("Passed", 0) %}
 <p><a href="/proyectos/{{ proyecto._id }}/suites">&larr; Suites de {{ proyecto.nombre }}</a></p>
-<section class="cabecera-seccion">
-    <h1>Dashboard &mdash; {{ proyecto.nombre }}</h1>
+<section class="tablero-cabeza cabecera-seccion">
+    <div>
+        <p class="antetitulo">Dashboard</p>
+        <h1>{{ proyecto.nombre }}</h1>
+    </div>
     <a href="/proyectos/{{ proyecto._id }}/defectos">Ver defectos</a>
 </section>
 
-<section class="tarjeta">
-    <h3>Cobertura de ejecucion</h3>
-    <p class="texto-suave">{{ total_ejecutados }} de {{ total_casos }} casos ejecutados al menos una vez</p>
-    <div class="barra-progreso">
-        <div class="barra-progreso-relleno" style="width: {{ cobertura_total }}%"></div>
+{# Franja de indicadores: cobertura con anillo y tres cifras clave. #}
+<section class="franja" aria-label="Resumen del proyecto">
+    <div class="franja-cobertura">
+        <div class="anillo-cobertura" role="img" aria-label="Cobertura de ejecución: {{ cobertura_total }}%">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="pista" cx="50" cy="50" r="40" pathLength="100"/><circle class="avance" cx="50" cy="50" r="40" pathLength="100" style="stroke-dashoffset: {{ 100 - cobertura_total }}"/></svg>
+            <span aria-hidden="true">{{ cobertura_total }}%</span>
+        </div>
+        <div>
+            <p class="franja-titulo">Cobertura de ejecucion</p>
+            <p class="franja-nota">{{ total_ejecutados }} de {{ total_casos }} casos ejecutados al menos una vez</p>
+        </div>
     </div>
-    <p><strong>{{ cobertura_total }}%</strong></p>
+    <div style="--tono: var(--exito)">
+        <p class="franja-titulo">Passed</p>
+        <p class="franja-valor" data-contar>{{ aprobados }}</p>
+        <p class="franja-nota">en la ultima ejecucion</p>
+    </div>
+    <div style="--tono: var(--falla)">
+        <p class="franja-titulo">Failed o Blocked</p>
+        <p class="franja-valor" data-contar>{{ fallidos }}</p>
+        <p class="franja-nota">casos por revisar</p>
+    </div>
+    <div style="--tono: var(--bloqueo)">
+        <p class="franja-titulo">Defectos abiertos</p>
+        <p class="franja-valor" data-contar>{{ total_defectos }}</p>
+        <p class="franja-nota">sin cerrar</p>
+    </div>
 </section>
 
-<section class="tarjeta" style="margin-top: 1.5rem;">
-    <h3>Resultados (ultima ejecucion por caso)</h3>
-    <div class="insignias" style="justify-content: flex-start;">
-        {% for clave, total in conteo_resultados.items() %}
-        <span class="resultado resultado-{{ clave|lower|replace(' ', '-') }}">{{ clave }}: {{ total }}</span>
-        {% endfor %}
-    </div>
-</section>
+<div class="tablero-rejilla">
+    <section class="tarjeta">
+        <h2>Resultados (ultima ejecucion por caso)</h2>
+        <p class="texto-suave">Como termino cada caso la ultima vez que se ejecuto.</p>
+        <div class="apilada" role="img" aria-label="{% for clave, total in conteo_resultados.items() %}{{ clave }}: {{ total }}{% if not loop.last %}, {% endif %}{% endfor %}">
+            {% for clave, total in conteo_resultados.items() %}{% if total and total_casos %}<span class="t-{{ clave|lower|replace(' ', '-') }}" style="width: {{ (total / total_casos * 100) | round(2) }}%"></span>{% endif %}{% endfor %}
+        </div>
+        <ul class="leyenda">
+            {% for clave, total in conteo_resultados.items() %}
+            <li class="t-{{ clave|lower|replace(' ', '-') }}"><b data-contar{% if not total %} class="cifra-cero"{% endif %}>{{ total }}</b><small><span class="resultado resultado-{{ clave|lower|replace(' ', '-') }}">{{ clave }}</span></small></li>
+            {% endfor %}
+        </ul>
+    </section>
 
-<section style="margin-top: 1.5rem;">
-    <h3>Cobertura por suite</h3>
+    <section class="tarjeta">
+        <h2>Defectos abiertos por severidad</h2>
+        <p class="texto-suave">Defectos que todavia no estan cerrados.</p>
+        {% set mayor = (defectos_abiertos.values() | max) if defectos_abiertos else 0 %}
+        <ul class="barras-sev">
+            {% for severidad, total in defectos_abiertos.items() %}
+            <li class="t-{{ severidad|lower }}">
+                <span class="severidad severidad-{{ severidad|lower }}">{{ severidad }}</span>
+                <span class="pista"><i style="width: {{ (total / mayor * 100) if mayor else 0 }}%"></i></span>
+                <b data-contar{% if not total %} class="cifra-cero"{% endif %}>{{ total }}</b>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<section class="tablero-suites">
+    <h2>Cobertura por suite</h2>
     {% if filas_suites %}
     <table class="tabla">
         <thead>
@@ -41,11 +88,10 @@
                 <td>{{ fila.nombre }}</td>
                 <td>{{ fila.total }}</td>
                 <td>{{ fila.ejecutados }}</td>
-                <td>{{ fila.cobertura }}%</td>
-                <td>{{ fila.resultados["Passed"] }}</td>
-                <td>{{ fila.resultados["Failed"] }}</td>
-                <td>{{ fila.resultados["Blocked"] }}</td>
-                <td>{{ fila.resultados["Skipped"] }}</td>
+                <td><span class="mini-cobertura"><span class="barra-progreso"><span class="barra-progreso-relleno" style="width: {{ fila.cobertura }}%; display: block"></span></span><span>{{ fila.cobertura }}%</span></span></td>
+                {% for clave in ["Passed", "Failed", "Blocked", "Skipped"] %}
+                <td{% if not fila.resultados[clave] %} class="cifra-cero"{% endif %}>{{ fila.resultados[clave] }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
@@ -53,14 +99,5 @@
     {% else %}
     <p>Todavia no hay suites en este proyecto.</p>
     {% endif %}
-</section>
-
-<section style="margin-top: 1.5rem;">
-    <h3>Defectos abiertos por severidad</h3>
-    <div class="insignias" style="justify-content: flex-start;">
-        {% for severidad, total in defectos_abiertos.items() %}
-        <span class="severidad severidad-{{ severidad|lower }}">{{ severidad }}: {{ total }}</span>
-        {% endfor %}
-    </div>
 </section>
 {% endblock %}

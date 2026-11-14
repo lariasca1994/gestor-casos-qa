@@ -2,10 +2,12 @@
 los redireccionamientos de sesion (login/permisos) en un solo lugar."""
 
 from fastapi import FastAPI, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.database import asegurar_indices, verificar_conexion
 from app.dependencias import NoAutorizado, RequiereLogin, usuario_actual
@@ -46,6 +48,16 @@ def base_no_disponible(request: Request, exc: Exception):
     )
 
 
+@app.exception_handler(StarletteHTTPException)
+async def error_http(request: Request, exc: StarletteHTTPException):
+    """404 con página propia (no consulta la base); los demás códigos siguen como siempre."""
+    if exc.status_code == 404:
+        return templates.TemplateResponse(
+            request, "no_encontrada.html", {"request": request, "ruta": request.url.path[:80]}, status_code=404
+        )
+    return await http_exception_handler(request, exc)
+
+
 @app.exception_handler(RequiereLogin)
 def redirigir_a_login(request: Request, exc: RequiereLogin):
     return RedirectResponse(url="/login", status_code=303)
@@ -73,6 +85,26 @@ def inicio(request: Request):
 def favicon():
     # Los navegadores lo piden en la raiz aunque la pagina declare otro icono.
     return FileResponse("app/static/iconos/favicon.ico")
+
+
+# Aplicación instalable (PWA). El service worker se sirve desde la raíz para controlar todo el
+# sitio; no se guarda en caché del navegador para que cada versión llegue al momento.
+_PWA = "app/static/pwa"
+
+
+@app.get("/sw.js", include_in_schema=False)
+def service_worker():
+    return FileResponse(f"{_PWA}/sw.js", media_type="text/javascript", headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"})
+
+
+@app.get("/manifest.webmanifest", include_in_schema=False)
+def manifiesto():
+    return FileResponse(f"{_PWA}/manifest.webmanifest", media_type="application/manifest+json")
+
+
+@app.get("/offline.html", include_in_schema=False)
+def sin_conexion():
+    return FileResponse(f"{_PWA}/offline.html", media_type="text/html")
 
 
 app.include_router(web_auth.router)
