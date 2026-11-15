@@ -52,7 +52,8 @@ def enviar(destino: str, nombre: str, asunto: str, texto: str, html: str) -> boo
         return False
     cuerpo = json.dumps({
         "sender": {"email": BREVO_REMITENTE, "name": NOMBRE},
-        "to": [{"email": destino, "name": nombre}],
+        # Brevo responde 400 si "name" va vacío.
+        "to": [{"email": destino, "name": nombre.strip()} if nombre and nombre.strip() else {"email": destino}],
         "subject": asunto,
         "textContent": texto,
         "htmlContent": documento(asunto, html),
