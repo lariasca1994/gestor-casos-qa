@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set RES = {"Passed": "Aprobado", "Failed": "Fallido", "Blocked": "Bloqueado", "Skipped": "Omitido", "Sin ejecutar": "Sin ejecutar"} %}
 {% block titulo %}Dashboard de {{ proyecto.nombre }}{% endblock %}
 {% block contenido %}
 {% set total_defectos = defectos_abiertos.values() | sum %}
@@ -26,12 +27,12 @@
         </div>
     </div>
     <div style="--tono: var(--exito)">
-        <p class="franja-titulo">Passed</p>
+        <p class="franja-titulo">Aprobados</p>
         <p class="franja-valor" data-contar>{{ aprobados }}</p>
         <p class="franja-nota">en la última ejecución</p>
     </div>
     <div style="--tono: var(--falla)">
-        <p class="franja-titulo">Failed o Blocked</p>
+        <p class="franja-titulo">Fallidos o bloqueados</p>
         <p class="franja-valor" data-contar>{{ fallidos }}</p>
         <p class="franja-nota">casos por revisar</p>
     </div>
@@ -46,12 +47,12 @@
     <section class="tarjeta">
         <h2>Resultados (última ejecución por caso)</h2>
         <p class="texto-suave">Cómo terminó cada caso la última vez que se ejecutó.</p>
-        <div class="apilada" role="img" aria-label="{% for clave, total in conteo_resultados.items() %}{{ clave }}: {{ total }}{% if not loop.last %}, {% endif %}{% endfor %}">
+        <div class="apilada" role="img" aria-label="{% for clave, total in conteo_resultados.items() %}{{ RES.get(clave, clave) }}: {{ total }}{% if not loop.last %}, {% endif %}{% endfor %}">
             {% for clave, total in conteo_resultados.items() %}{% if total and total_casos %}<span class="t-{{ clave|lower|replace(' ', '-') }}" style="width: {{ (total / total_casos * 100) | round(2) }}%"></span>{% endif %}{% endfor %}
         </div>
         <ul class="leyenda">
             {% for clave, total in conteo_resultados.items() %}
-            <li class="t-{{ clave|lower|replace(' ', '-') }}"><b data-contar{% if not total %} class="cifra-cero"{% endif %}>{{ total }}</b><small><span class="resultado resultado-{{ clave|lower|replace(' ', '-') }}">{{ clave }}</span></small></li>
+            <li class="t-{{ clave|lower|replace(' ', '-') }}"><b data-contar{% if not total %} class="cifra-cero"{% endif %}>{{ total }}</b><small><span class="resultado resultado-{{ clave|lower|replace(' ', '-') }}">{{ RES.get(clave, clave) }}</span></small></li>
             {% endfor %}
         </ul>
     </section>
@@ -79,7 +80,7 @@
         <thead>
             <tr>
                 <th>Suite</th><th>Casos</th><th>Ejecutados</th><th>Cobertura</th>
-                <th>Passed</th><th>Failed</th><th>Blocked</th><th>Skipped</th>
+                <th>Aprobado</th><th>Fallido</th><th>Bloqueado</th><th>Omitido</th>
             </tr>
         </thead>
         <tbody>

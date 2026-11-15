@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set RES = {"Passed": "Aprobado", "Failed": "Fallido", "Blocked": "Bloqueado", "Skipped": "Omitido", "Sin ejecutar": "Sin ejecutar"} %}
 {% block titulo %}Casos de {{ suite.nombre }}{% endblock %}
 {% block contenido %}
 <p><a href="/proyectos/{{ proyecto._id }}/suites">&larr; Suites de {{ proyecto.nombre }}</a></p>
@@ -22,7 +23,7 @@
             <td>{{ caso.estado }}</td>
             <td>
                 {% if ultima %}
-                <span class="resultado resultado-{{ ultima.resultado|lower }}">{{ ultima.resultado }}</span>
+                <span class="resultado resultado-{{ ultima.resultado|lower }}">{{ RES.get(ultima.resultado, ultima.resultado) }}</span>
                 {% else %}
                 <span class="texto-suave">Sin ejecutar</span>
                 {% endif %}
