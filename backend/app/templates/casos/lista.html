@@ -10,7 +10,7 @@
 {% if casos %}
 <table class="tabla">
     <thead>
-        <tr><th>Titulo</th><th>Prioridad</th><th>Estado</th><th>Ultimo resultado</th><th></th></tr>
+        <tr><th>Título</th><th>Prioridad</th><th>Estado</th><th>Último resultado</th><th></th></tr>
     </thead>
     <tbody>
         {% for caso in casos %}
@@ -40,6 +40,6 @@
     </tbody>
 </table>
 {% else %}
-<p>Todavia no hay casos en esta suite. <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/nuevo">Crea el primero</a>.</p>
+<p>Todavía no hay casos en esta suite. <a href="/proyectos/{{ proyecto._id }}/suites/{{ suite._id }}/casos/nuevo">Crea el primero</a>.</p>
 {% endif %}
 {% endblock %}

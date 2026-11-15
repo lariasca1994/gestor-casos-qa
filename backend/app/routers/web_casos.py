@@ -96,7 +96,7 @@ def crear(
                 "suite": repo_suites.obtener(suite_id),
                 "caso": None,
                 "pasos_texto": pasos,
-                "error": "El titulo es obligatorio.",
+                "error": "El título es obligatorio.",
             },
             status_code=400,
         )

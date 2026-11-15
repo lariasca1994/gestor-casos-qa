@@ -17,37 +17,37 @@ logger = logging.getLogger(__name__)
 # Los pasos van sin numerar: la plantilla los numera con <ol>.
 PROYECTOS_EJEMPLO = [
     {
-        "nombre": "Portal de Facturacion Electronica",
-        "descripcion": "Modulo web para generacion y consulta de facturas electronicas con validacion DIAN.",
+        "nombre": "Portal de Facturación Electrónica",
+        "descripcion": "Módulo web para generación y consulta de facturas electrónicas con validación DIAN.",
         "suites": [
             {
                 "nombre": "Autenticacion",
-                "descripcion": "Casos de login, logout y control de sesion.",
+                "descripcion": "Casos de login, logout y control de sesión.",
                 "casos": [
                     {
-                        "titulo": "Login exitoso con credenciales validas",
+                        "titulo": "Login exitoso con credenciales válidas",
                         "pasos": [
                             "Ingresar a la URL de login",
-                            "Digitar usuario y contrasena validos",
-                            "Clic en 'Iniciar sesion'",
+                            "Digitar usuario y contraseña válidos",
+                            "Clic en 'Iniciar sesión'",
                         ],
                         "resultado_esperado": "El sistema redirige al dashboard y muestra el nombre del usuario autenticado.",
                         "prioridad": "Alta",
                     },
                     {
-                        "titulo": "Login con contrasena incorrecta",
+                        "titulo": "Login con contraseña incorrecta",
                         "pasos": [
                             "Ingresar a la URL de login",
-                            "Digitar usuario valido y contrasena incorrecta",
-                            "Clic en 'Iniciar sesion'",
+                            "Digitar usuario válido y contraseña incorrecta",
+                            "Clic en 'Iniciar sesión'",
                         ],
-                        "resultado_esperado": "El sistema muestra el mensaje 'Usuario o contrasena incorrectos' y no otorga acceso.",
+                        "resultado_esperado": "El sistema muestra el mensaje 'Usuario o contraseña incorrectos' y no otorga acceso.",
                         "prioridad": "Alta",
                     },
                     {
                         "titulo": "Bloqueo de cuenta tras 5 intentos fallidos",
                         "pasos": [
-                            "Intentar login con contrasena incorrecta cinco veces seguidas",
+                            "Intentar login con contraseña incorrecta cinco veces seguidas",
                         ],
                         "resultado_esperado": "La cuenta queda bloqueada temporalmente y se notifica al usuario.",
                         "prioridad": "Media",
@@ -56,10 +56,10 @@ PROYECTOS_EJEMPLO = [
             },
             {
                 "nombre": "Emision de facturas",
-                "descripcion": "Casos de creacion y validacion de facturas.",
+                "descripcion": "Casos de creación y validación de facturas.",
                 "casos": [
                     {
-                        "titulo": "Emitir factura con datos completos y validos",
+                        "titulo": "Emitir factura con datos completos y válidos",
                         "pasos": [
                             "Ir a 'Nueva factura'",
                             "Diligenciar cliente, items y valores",
@@ -84,11 +84,11 @@ PROYECTOS_EJEMPLO = [
     },
     {
         "nombre": "App de Reservas de Espacios",
-        "descripcion": "Aplicacion para reservar salas y espacios comunes con calendario de disponibilidad.",
+        "descripcion": "Aplicación para reservar salas y espacios comunes con calendario de disponibilidad.",
         "suites": [
             {
-                "nombre": "Gestion de reservas",
-                "descripcion": "Casos de creacion, edicion y cancelacion de reservas.",
+                "nombre": "Gestión de reservas",
+                "descripcion": "Casos de creación, edición y cancelación de reservas.",
                 "casos": [
                     {
                         "titulo": "Crear reserva en horario disponible",
@@ -125,24 +125,24 @@ PROYECTOS_EJEMPLO = [
         ],
     },
     {
-        "nombre": "API de Gestion de Incidentes TI",
-        "descripcion": "API REST para registro, asignacion y seguimiento de incidentes de soporte tecnico.",
+        "nombre": "API de Gestión de Incidentes TI",
+        "descripcion": "API REST para registro, asignación y seguimiento de incidentes de soporte técnico.",
         "suites": [
             {
                 "nombre": "Endpoints de incidentes",
-                "descripcion": "Casos sobre creacion y consulta de incidentes via API.",
+                "descripcion": "Casos sobre creación y consulta de incidentes vía API.",
                 "casos": [
                     {
-                        "titulo": "POST /incidentes crea un incidente valido",
+                        "titulo": "POST /incidentes crea un incidente válido",
                         "pasos": [
-                            "Enviar POST a /incidentes con JSON valido (titulo, descripcion, prioridad)",
+                            "Enviar POST a /incidentes con JSON válido (título, descripción, prioridad)",
                             "Revisar la respuesta",
                         ],
                         "resultado_esperado": "Respuesta 201 Created con el ID del incidente generado.",
                         "prioridad": "Alta",
                     },
                     {
-                        "titulo": "POST /incidentes sin token de autenticacion",
+                        "titulo": "POST /incidentes sin token de autenticación",
                         "pasos": [
                             "Enviar POST a /incidentes sin header Authorization",
                         ],

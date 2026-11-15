@@ -27,3 +27,4 @@ backend/app/comandos/crear_admin.py
 # Paquete temporal armado para el despliegue en AWS Lambda
 backend/package/
 gestor-casos-qa-lambda.zip
+backend/.venv-pruebas/

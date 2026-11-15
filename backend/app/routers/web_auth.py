@@ -55,9 +55,9 @@ def procesar_registro(
 ):
     error = None
     if contrasena != confirmar:
-        error = "Las contrasenas no coinciden."
+        error = "Las contraseñas no coinciden."
     elif len(contrasena) < 8:
-        error = "La contrasena debe tener al menos 8 caracteres."
+        error = "La contraseña debe tener al menos 8 caracteres."
     elif buscar_por_correo(email):
         error = "Ya existe una cuenta con ese correo."
 
@@ -92,7 +92,7 @@ def procesar_login(request: Request, email: str = Form(...), contrasena: str = F
         if usuario:
             mfa.fallo_de_clave(usuario)
         return templates.TemplateResponse(request, "login.html",
-            {"request": request, "error": "Correo o contrasena incorrectos."},
+            {"request": request, "error": "Correo o contraseña incorrectos."},
             status_code=400,
         )
     mfa.clave_correcta(usuario)
@@ -405,9 +405,9 @@ def procesar_restablecer(
     if not usuario or not usuario.get("activo", True) or not huella_coincide(usuario["password_hash"], leido[1]):
         error = "El enlace no es válido o ya venció. Pide uno nuevo."
     elif contrasena != confirmar:
-        error = "Las contrasenas no coinciden."
+        error = "Las contraseñas no coinciden."
     elif len(contrasena) < 8:
-        error = "La contrasena debe tener al menos 8 caracteres."
+        error = "La contraseña debe tener al menos 8 caracteres."
     if error:
         return templates.TemplateResponse(request, "restablecer.html", {"request": request, "token": token, "error": error}, status_code=400
         )
@@ -442,9 +442,9 @@ def cambiar_contrasena(
     if not verificar(actual, usuario["password_hash"]):
         error = "La contraseña actual no es correcta."
     elif contrasena != confirmar:
-        error = "Las contrasenas no coinciden."
+        error = "Las contraseñas no coinciden."
     elif len(contrasena) < 8:
-        error = "La contrasena debe tener al menos 8 caracteres."
+        error = "La contraseña debe tener al menos 8 caracteres."
     elif contrasena == actual:
         error = "La contraseña nueva debe ser distinta de la actual."
     if error:

@@ -1,5 +1,5 @@
-"""Paginas de Suites de prueba, siempre dentro de un proyecto. El acceso al
-proyecto (dueno o ADMIN) se valida en cada ruta via proyecto_autorizado."""
+"""Páginas de Suites de prueba, siempre dentro de un proyecto. El acceso al
+proyecto (dueno o ADMIN) se valida en cada ruta vía proyecto_autorizado."""
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse

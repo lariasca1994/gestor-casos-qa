@@ -7,7 +7,7 @@
 {% if defectos %}
 <table class="tabla">
     <thead>
-        <tr><th>Titulo</th><th>Severidad</th><th>Estado</th><th>Reportado</th><th></th></tr>
+        <tr><th>Título</th><th>Severidad</th><th>Estado</th><th>Reportado</th><th></th></tr>
     </thead>
     <tbody>
         {% for defecto in defectos %}
@@ -30,6 +30,6 @@
     </tbody>
 </table>
 {% else %}
-<p>Todavia no hay defectos reportados en este proyecto.</p>
+<p>Todavía no hay defectos reportados en este proyecto.</p>
 {% endif %}
 {% endblock %}

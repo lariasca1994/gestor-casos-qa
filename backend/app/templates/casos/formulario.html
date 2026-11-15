@@ -6,7 +6,7 @@
     <p class="texto-suave">{{ proyecto.nombre }} &rsaquo; {{ suite.nombre }}</p>
     {% if error %}<p class="aviso error">{{ error }}</p>{% endif %}
     <form method="post" action="{{ '/proyectos/' + proyecto._id|string + '/suites/' + suite._id|string + '/casos/' + caso._id|string + '/editar' if caso else '/proyectos/' + proyecto._id|string + '/suites/' + suite._id|string + '/casos/nuevo' }}">
-        <label for="titulo">Titulo</label>
+        <label for="titulo">Título</label>
         <input type="text" id="titulo" name="titulo" required autofocus
                value="{{ caso.titulo if caso else '' }}">
 

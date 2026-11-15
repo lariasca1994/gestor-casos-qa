@@ -1,4 +1,4 @@
-"""Identificacion del usuario a partir de la cookie de sesion, y control de
+"""Identificación del usuario a partir de la cookie de sesión, y control de
 acceso: cada proyecto solo lo puede ver/editar su dueno o un ADMIN."""
 
 from fastapi import Depends, Request
@@ -9,11 +9,11 @@ from app.seguridad import huella_coincide, leer_token
 
 
 class RequiereLogin(Exception):
-    """No hay sesion valida: la pagina protegida no se puede mostrar."""
+    """No hay sesión valida: la página protegida no se puede mostrar."""
 
 
 class NoAutorizado(Exception):
-    """Hay sesion, pero el rol del usuario no alcanza para esta accion."""
+    """Hay sesión, pero el rol del usuario no alcanza para esta acción."""
 
 
 def usuario_actual(request: Request) -> dict | None:

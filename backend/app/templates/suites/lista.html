@@ -14,7 +14,7 @@
 {% if suites %}
 <table class="tabla">
     <thead>
-        <tr><th>Nombre</th><th>Descripcion</th><th></th></tr>
+        <tr><th>Nombre</th><th>Descripción</th><th></th></tr>
     </thead>
     <tbody>
         {% for suite in suites %}
@@ -34,6 +34,6 @@
     </tbody>
 </table>
 {% else %}
-<p>Todavia no hay suites en este proyecto. <a href="/proyectos/{{ proyecto._id }}/suites/nueva">Crea la primera</a>.</p>
+<p>Todavía no hay suites en este proyecto. <a href="/proyectos/{{ proyecto._id }}/suites/nueva">Crea la primera</a>.</p>
 {% endif %}
 {% endblock %}

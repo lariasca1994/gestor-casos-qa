@@ -21,14 +21,14 @@
             <span aria-hidden="true">{{ cobertura_total }}%</span>
         </div>
         <div>
-            <p class="franja-titulo">Cobertura de ejecucion</p>
+            <p class="franja-titulo">Cobertura de ejecución</p>
             <p class="franja-nota">{{ total_ejecutados }} de {{ total_casos }} casos ejecutados al menos una vez</p>
         </div>
     </div>
     <div style="--tono: var(--exito)">
         <p class="franja-titulo">Passed</p>
         <p class="franja-valor" data-contar>{{ aprobados }}</p>
-        <p class="franja-nota">en la ultima ejecucion</p>
+        <p class="franja-nota">en la última ejecución</p>
     </div>
     <div style="--tono: var(--falla)">
         <p class="franja-titulo">Failed o Blocked</p>
@@ -44,8 +44,8 @@
 
 <div class="tablero-rejilla">
     <section class="tarjeta">
-        <h2>Resultados (ultima ejecucion por caso)</h2>
-        <p class="texto-suave">Como termino cada caso la ultima vez que se ejecuto.</p>
+        <h2>Resultados (última ejecución por caso)</h2>
+        <p class="texto-suave">Cómo terminó cada caso la última vez que se ejecutó.</p>
         <div class="apilada" role="img" aria-label="{% for clave, total in conteo_resultados.items() %}{{ clave }}: {{ total }}{% if not loop.last %}, {% endif %}{% endfor %}">
             {% for clave, total in conteo_resultados.items() %}{% if total and total_casos %}<span class="t-{{ clave|lower|replace(' ', '-') }}" style="width: {{ (total / total_casos * 100) | round(2) }}%"></span>{% endif %}{% endfor %}
         </div>
@@ -58,7 +58,7 @@
 
     <section class="tarjeta">
         <h2>Defectos abiertos por severidad</h2>
-        <p class="texto-suave">Defectos que todavia no estan cerrados.</p>
+        <p class="texto-suave">Defectos que todavía no están cerrados.</p>
         {% set mayor = (defectos_abiertos.values() | max) if defectos_abiertos else 0 %}
         <ul class="barras-sev">
             {% for severidad, total in defectos_abiertos.items() %}
@@ -97,7 +97,7 @@
         </tbody>
     </table>
     {% else %}
-    <p>Todavia no hay suites en este proyecto.</p>
+    <p>Todavía no hay suites en este proyecto.</p>
     {% endif %}
 </section>
 {% endblock %}

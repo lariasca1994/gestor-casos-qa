@@ -1,5 +1,5 @@
 """Registro de ejecuciones de un caso de prueba y su historial. El acceso al
-proyecto (dueno o ADMIN) se valida en cada ruta via proyecto_autorizado."""
+proyecto (dueno o ADMIN) se valida en cada ruta vía proyecto_autorizado."""
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
