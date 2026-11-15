@@ -1,354 +1,311 @@
-# 📘 Manual de usuario · Gestor de Casos de Prueba QA
+# 📘 Manual de usuario · Gestor de casos de prueba QA
 
-Guía para usar la plataforma paso a paso: qué significa cada campo, qué datos se ingresan y qué
-protege la plataforma. Para la parte técnica vuelve al [README](../README.md).
+## 1. Portada
 
-**Demo:** [Gestor de casos de prueba QA (AWS Lambda)](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
+![Portada del Gestor de casos de prueba QA: cada caso, con su veredicto](img/manual/01-portada.png)
+
+| | |
+|---|---|
+| **Producto** | Gestor de casos de prueba QA |
+| **Documento** | Manual de usuario |
+| **Versión** | 2.0 · noviembre de 2026 |
+| **Dirigido a** | Analistas de pruebas, líderes de QA y desarrolladores |
+| **Dirección** | [Gestor de casos de prueba QA](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/) |
+| **Autor** | Luis F. A. |
 
 ## Contenido
 
-1. [Proyecto: objetivos y alcances](#1-proyecto-objetivos-y-alcances)
-2. [Glosario](#2-glosario)
-3. [Plataformas, base de datos y servicios](#3-plataformas-base-de-datos-y-servicios)
-4. [Paso a paso](#4-paso-a-paso)
-5. [Seguridad: tu información protegida](#5-seguridad-tu-información-protegida)
-6. [Agradecimientos](#6-agradecimientos)
+1. [Portada](#1-portada)
+2. [Introducción](#2-introducción)
+3. [Objetivo](#3-objetivo)
+4. [Alcance](#4-alcance)
+5. [Acceso al sistema](#5-acceso-al-sistema)
+6. [Pantalla principal](#6-pantalla-principal)
+7. [Navegación](#7-navegación)
+8. [Funcionalidades](#8-funcionalidades)
+9. [Gestión de perfil](#9-gestión-de-perfil)
+10. [Mensajes frecuentes](#10-mensajes-frecuentes)
+11. [Preguntas frecuentes](#11-preguntas-frecuentes)
+12. [Glosario](#12-glosario)
 
 ---
 
-## 1. Proyecto: objetivos y alcances
+## 2. Introducción
 
-### Objetivo
+El **Gestor de casos de prueba QA** reúne en un solo lugar los proyectos, las suites y los casos de
+prueba de un equipo. Cada vez que se ejecuta un caso se registra su resultado; lo que falla se
+convierte en un defecto con su origen, y un dashboard muestra la cobertura sin depender de una
+hoja de cálculo.
 
-Es el cuaderno de trabajo de un equipo de QA. El trabajo se organiza así:
+Este manual explica cada pantalla, paso a paso y con imágenes.
 
-```
-Proyecto → Suites de prueba → Casos de prueba → Ejecuciones → Defectos
-```
+![Cómo funciona el Gestor de casos de prueba QA: personas, aplicación, plataforma e información](img/manual/00-como-funciona.svg)
 
-Defines qué vas a probar, anotas el resultado de cada ejecución, reportas los defectos y ves la
-cobertura en un tablero.
+## 3. Objetivo
 
-### Alcance: qué necesitas y qué esperar
+Que cualquier persona del equipo pueda, sin conocimientos técnicos:
 
-- Solo necesitas un navegador.
-- Al crear tu cuenta, la plataforma te agrega **proyectos de ejemplo** con suites y casos ya
-  escritos, para que veas cómo se usa desde el primer momento.
+- Crear su cuenta e ingresar de forma segura.
+- Organizar las pruebas en proyectos, suites y casos.
+- Registrar cada ejecución con su resultado y reportar los defectos encontrados.
+- Consultar la cobertura y los resultados de cada proyecto.
 
-### Límites
+## 4. Alcance
 
-Es una demo de portafolio:
+**Incluye:** registro e ingreso con verificación en dos pasos, proyectos, suites, casos de prueba,
+registro de ejecuciones, defectos con su severidad y dashboard de cobertura.
 
-- La contraseña solo exige 8 caracteres: usa una frase larga que no uses en otros sitios.
-- No escribas datos personales o confidenciales en los casos y defectos.
+**No incluye:** ejecución automática de pruebas ni integración con otras herramientas de gestión.
 
-## 2. Glosario
+**Qué necesitas:** un navegador actualizado, conexión a internet, un correo propio y una app
+autenticadora en el celular (o acceso a tu correo para recibir códigos).
 
-Palabras técnicas que aparecen en este manual, explicadas en lenguaje simple.
+**Buenas prácticas:** es una plataforma de demostración; no registres datos personales ni
+información confidencial de tus proyectos reales en los casos o comentarios.
 
-| Término | Qué significa |
-|---|---|
-| **Administrador** | Cuenta con permisos para gestionar usuarios y configuraciones de la aplicación. |
-| **API** | Puerta de entrada de un programa para que otros programas le pidan o le envíen datos. |
-| **Backend** | La parte de la aplicación que trabaja "detrás": procesa lo que envías y habla con la base de datos. |
-| **Base de datos** | Lugar donde la aplicación guarda la información de forma ordenada y permanente. |
-| **Caso de prueba** | Pasos y resultado esperado para comprobar que una función de un sistema trabaja bien. |
-| **Contraseña cifrada (hash)** | La contraseña no se guarda tal cual, sino como una "huella" de la que no se puede recuperar el texto original. |
-| **Cookie** | Pequeño dato que el navegador guarda para recordar tu sesión en ese sitio. |
-| **Defecto (bug)** | Error encontrado al probar: el sistema no hace lo que debería. |
-| **JWT** | Tipo de token firmado digitalmente: si alguien lo altera, el servidor lo rechaza. |
-| **Modo mantenimiento** | Pantalla que aparece cuando el servicio o su base de datos no responden; se recupera sola cuando vuelven. |
-| **Navegador** | Programa con el que abres páginas web: Chrome, Edge, Firefox, Safari. |
-| **Nube** | Servidores de una empresa (Amazon, Microsoft, Google, Oracle…) donde la aplicación funciona sin depender de un computador propio. |
-| **Rate limit (límite de intentos)** | Tope de intentos en poco tiempo, para frenar a quien intenta adivinar contraseñas. |
-| **Rol** | Tipo de cuenta que define qué puede hacer cada persona (por ejemplo, usuario o administrador). |
-| **Servidor** | Computador en la nube que atiende las peticiones de la aplicación. |
-| **Sesión** | El tiempo en que la aplicación te reconoce después de iniciar sesión, sin pedirte la contraseña de nuevo. |
-| **Suite de pruebas** | Grupo de casos de prueba relacionados. |
-| **Variables de entorno / secretos** | Claves y contraseñas internas de la aplicación, guardadas fuera del código para que no queden expuestas. |
+## 5. Acceso al sistema
 
-## 3. Plataformas, base de datos y servicios
+### 5.1 Crear una cuenta
 
-Qué servicio de nube, base de datos o API usa el proyecto y para qué sirve cada uno.
+En la pantalla de ingreso pulsa **Regístrate**.
 
-| Plataforma | Tipo | Qué hace en el proyecto |
-|---|---|---|
-| ![AWS Lambda](https://img.shields.io/badge/AWS_Lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white) | Nube | Ejecuta la app FastAPI mediante el adaptador Mangum, expuesta con una Function URL (sin API Gateway). |
-| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) | Base de datos | MongoDB Atlas guarda las seis colecciones: `usuarios`, `proyectos`, `suites`, `casos_prueba`, `ejecuciones` y `defectos`. No requiere ningún otro servicio ni clave de API. |
-| ![qa-evidencia](https://img.shields.io/badge/qa--evidencia-2EAD33?style=for-the-badge&logo=playwright&logoColor=white) | Pruebas automatizadas | Prueba la demo automáticamente dos veces al día y publica la evidencia. |
-
-## 4. Paso a paso
-
-### 4.1 Crear una cuenta
-
-![Formulario de registro con sus campos numerados](img/manual/01-registro.png)
-
-| # | Campo | Qué escribir | Reglas |
-|:-:|---|---|---|
-| 1 | Nombre | Tu nombre; aparece arriba a la derecha | Obligatorio |
-| 2 | Correo | El correo con el que vas a entrar | Formato válido y único |
-| 3 | Contraseña | Tu contraseña | Mínimo **8 caracteres** |
-| 4 | Confirmar contraseña | La misma contraseña | Debe coincidir con el campo 3 |
-| 5 | Crear cuenta | Botón | Crea la cuenta con rol **QA** y te lleva a elegir tu verificación en dos pasos |
-
-El registro siempre crea cuentas con rol QA. El rol de administrador no se puede pedir desde el
-formulario.
-
-### 4.2 Iniciar sesión
-
-![Formulario de inicio de sesión](img/manual/02-login.png)
+![Formulario de registro con sus campos numerados](img/manual/02-registro.png)
 
 | # | Campo | Qué escribir |
+|:-:|---|---|
+| 1 | Nombre | Tu nombre, como lo verá el equipo |
+| 2 | Correo | Un correo al que tengas acceso |
+| 3 | Contraseña | Mínimo 8 caracteres |
+| 4 | Confirmar contraseña | La misma contraseña |
+| 5 | Crear cuenta | Crea tu cuenta y te lleva a configurar la verificación en dos pasos |
+
+### 5.2 Iniciar sesión
+
+![Formulario de inicio de sesión con sus elementos numerados](img/manual/03-ingreso.png)
+
+| # | Elemento | Qué hace |
 |:-:|---|---|
 | 1 | Correo | El correo de tu cuenta |
 | 2 | Contraseña | Tu contraseña |
-| 3 | Ingresar | Pide el código de tu verificación en dos pasos |
+| 3 | Ingresar | Comprueba tus datos y pasa a la verificación en dos pasos |
+| 4 | ¿Olvidaste tu contraseña? | Abre la recuperación de contraseña (5.4) |
 
-Si el correo o la contraseña no coinciden, el mensaje es el mismo en ambos casos. Después de la
-contraseña escribe el **código de 6 dígitos** de tu método y pulsa **Verificar**.
+Debajo, **Regístrate** abre el registro (5.1).
 
-### Olvidé mi contraseña
+### 5.3 Verificación en dos pasos
 
-En **Iniciar sesión**, pulsa **¿Olvidaste tu contraseña?** y escribe tu correo. Si la cuenta existe y
-está activa, te llega un enlace para crear una contraseña nueva (mínimo 8 caracteres). El enlace vence
-en 30 minutos y sirve una sola vez. La pantalla muestra el mismo mensaje exista o no la cuenta.
+Cada ingreso pide, además de la contraseña, un código de 6 dígitos. La primera vez eliges cómo
+recibirlo: con una **app autenticadora** (escaneas un código QR y la app muestra un código nuevo
+cada 30 segundos, incluso sin internet) o con un **código por correo**.
 
-El enlace abre una pantalla con solo dos campos: **Nueva contraseña** y **Confirma la nueva
-contraseña**. Al guardarla se **cierran todas las sesiones abiertas** (en cualquier equipo) y tu
-verificación en dos pasos **sigue activa**: el siguiente ingreso pide la contraseña nueva y tu código.
-
-### Perdí mi autenticador
-
-Si cambiaste de teléfono o borraste la app autenticadora:
-
-1. Ingresa tu correo y contraseña como siempre.
-2. En la pantalla **Escribe tu código**, pulsa **Perdí mi autenticador** (siempre está visible).
-3. Te llega un código de 6 dígitos **al correo de tu cuenta**, aunque no hayas activado el método por
-   correo. Vence en 15 minutos; si no llega, pulsa **Enviar otro código** (hay un límite de envíos).
-4. Escribe el código y pulsa **Continuar**. Si te equivocas varias veces seguidas, la recuperación se
-   bloquea unos minutos.
-5. Escanea el QR nuevo con tu app y escribe el código que muestra. Al pulsar **Activar** entras a la
-   plataforma.
-
-La app anterior sigue siendo la válida hasta que confirmes la nueva, y acertar el código del correo
-no abre la sesión por sí solo: hay que terminar de configurar la app nueva.
-
-### Cambiar la contraseña
-
-Con la sesión iniciada, abre **Contraseña** en el menú, escribe la actual y la nueva dos veces. Las
-demás sesiones abiertas se cierran; la del equipo donde la cambiaste continúa.
-
-### Verificación en dos pasos (obligatoria)
-
-Cada ingreso pide, además de la contraseña, un código. La primera vez que ingresas (o al crear la
-cuenta) eliges cómo recibirlo:
-
-| Método | Cómo funciona |
-|---|---|
-| **App autenticadora** (recomendado) | Escaneas un código QR con Google Authenticator, Microsoft Authenticator u otra app; desde ese momento la app muestra un código nuevo cada 30 segundos, incluso sin internet. Si no puedes escanear, escribe la clave que aparece bajo el QR. |
-| **Código por correo** | Cada vez que ingresas te llega un código de 6 dígitos que vence en 10 minutos y sirve una sola vez. |
-
-El código se escribe en **seis casillas**, una por dígito: puedes teclearlo o pegarlo completo y
-cada número cae en su casilla. Sobre el formulario, un candado se abre al enviar un código completo
-y se sacude si el código no es válido. Un anillo muestra cuánto falta para que la app cambie de
-código o, con el código por correo, cuánto le queda antes de vencer.
-
-Confirma el método escribiendo el primer código. Desde **Seguridad** (menú lateral) puedes
-**agregar el método que no elegiste** y escoger cuál se pide **por defecto**; tener los dos te
-permite entrar aunque no tengas el teléfono a mano.
-
-### 4.3 Proyectos
-
-![Lista de proyectos](img/manual/03-proyectos.png)
+![Pantalla del código de verificación con sus elementos numerados](img/manual/04-verificacion.png)
 
 | # | Elemento | Qué hace |
 |:-:|---|---|
-| 1 | + Nuevo proyecto | Abre el formulario para crear un proyecto |
-| 2 | Ver suites | Entra al proyecto |
-| 3 | Editar | Cambia el nombre o la descripción |
+| 1 | Código de 6 dígitos | El código que muestra tu app o que llegó a tu correo |
+| 2 | Verificar | Confirma el código y abre la plataforma |
+| 3 | Perdí mi autenticador | Si ya no tienes la app, te envía un código al correo de tu cuenta para configurar una app nueva |
 
-Solo ves **tus** proyectos. El administrador ve todos.
+**Perdí mi autenticador:** pulsa el enlace, escribe el código que llega a tu correo y escanea el
+nuevo código QR con tu app. La app anterior deja de servir en ese momento.
 
-**Menú lateral.** A la izquierda están **Proyectos** y, dentro de un proyecto, sus **Suites**,
-**Dashboard** y **Defectos** (con el nombre del proyecto encima); el administrador ve además
-**Usuarios**. Una luz verde marca la sección en la que estás. Al pie del menú están tu nombre y tu
-rol, **Contraseña**, **Seguridad** y **Salir**. **Compactar menú** lo reduce a solo íconos (al
-pasar el cursor aparece el nombre de cada uno) y la preferencia se recuerda en ese equipo.
+### 5.4 Recuperar la contraseña
 
-![Menú lateral compacto con el nombre de la opción al pasar el cursor](img/manual/12-menu-compacto.png)
-
-**En el celular** el menú se convierte en una **barra inferior** translúcida con las mismas
-secciones; **Más** abre una hoja desde abajo con Contraseña, Seguridad y Salir (y Usuarios para el
-administrador).
-
-![Dashboard en el celular con la hoja Más abierta](img/manual/15-movil-mas.png)
-
-### 4.4 Crear un proyecto
-
-![Formulario de proyecto](img/manual/04-proyecto-nuevo.png)
-
-| # | Campo | Qué escribir | Reglas |
-|:-:|---|---|---|
-| 1 | Nombre | Nombre del sistema o producto que vas a probar | Obligatorio |
-| 2 | Descripción | Alcance de las pruebas | Opcional |
-| 3 | Guardar | Botón | Crea el proyecto |
-
-### 4.5 Suites de prueba
-
-![Suites de un proyecto](img/manual/05-suites.png)
-
-Una suite agrupa casos de un mismo módulo o tipo de prueba.
+![Pantalla para pedir el enlace de recuperación](img/manual/05-recuperar.png)
 
 | # | Elemento | Qué hace |
 |:-:|---|---|
-| 1 | + Nueva suite | Crea una suite con **Nombre** (obligatorio) y **Descripción** |
-| 2 | Ver casos | Entra a los casos de la suite |
+| 1 | Correo | El correo de tu cuenta |
+| 2 | Enviar enlace | Envía a ese correo un enlace para crear una contraseña nueva |
 
-Cada suite también ofrece **Editar** y **Eliminar**.
+El mensaje es el mismo exista o no la cuenta. Abre el enlace del correo (vence en poco tiempo y
+sirve una sola vez), escribe la contraseña nueva y vuelve a ingresar.
 
-### 4.6 Casos de prueba
+## 6. Pantalla principal
 
-![Casos de una suite](img/manual/06-casos.png)
+Al ingresar se abre **Proyectos**, con los proyectos de tu cuenta.
+
+![Lista de proyectos con sus elementos numerados](img/manual/06-pantalla-principal.png)
 
 | # | Elemento | Qué hace |
 |:-:|---|---|
-| 1 | + Nuevo caso | Abre el formulario del caso |
-| 2 | Ejecutar | Registra el resultado de una ejecución |
+| 1 | Menú lateral | Lleva a Proyectos y, dentro de un proyecto, a Suites, Dashboard y Defectos |
+| 2 | + Nuevo proyecto | Abre el formulario para crear un proyecto (8.1) |
+| 3 | Nombre del proyecto | Abre sus suites; **Ver suites** hace lo mismo y **Editar** cambia su nombre o descripción |
 
-La columna **Último resultado** muestra cómo terminó la ejecución más reciente.
+## 7. Navegación
 
-### 4.7 Crear un caso
+En el computador el menú está a la izquierda. Al entrar a un proyecto aparecen sus opciones
+(**Suites**, **Dashboard** y **Defectos**). **Compactar menú** lo reduce a íconos y, al pasar el
+cursor, muestra el nombre de cada opción.
 
-![Formulario de caso de prueba con sus campos numerados](img/manual/07-caso-nuevo.png)
+| Menú compacto (computador) | Celular con la hoja "Más" |
+|:-:|:-:|
+| ![Menú lateral compacto](img/manual/07-navegacion.png) | ![Celular con la hoja Más abierta](img/manual/08-navegacion-movil.png) |
 
-| # | Campo | Qué escribir | Reglas |
-|:-:|---|---|---|
-| 1 | Título | Qué valida el caso, en una frase | Obligatorio |
-| 2 | Pasos | Las acciones a seguir, **una por línea** | Cada línea se guarda como un paso numerado |
-| 3 | Resultado esperado | Qué debe ocurrir si el sistema funciona bien | — |
-| 4 | Prioridad | Alta, Media o Baja | Por defecto, Media |
-| 5 | Estado | Activo u Obsoleto | Los obsoletos se conservan como historial |
-| 6 | Guardar | Botón | Crea el caso |
+En el celular y la tablet en vertical, el menú pasa a una barra inferior; **Más** abre una hoja con
+**Contraseña**, **Seguridad** y **Salir**. El botón ◐ cambia entre tema claro y oscuro.
 
-### 4.8 Ejecutar un caso
+## 8. Funcionalidades
 
-![Registro de una ejecución e historial](img/manual/08-ejecuciones.png)
+### 8.1 Crear: proyectos, casos y ejecuciones
+
+**Proyecto.** En Proyectos pulsa **+ Nuevo proyecto**.
+
+![Formulario de proyecto nuevo con sus campos numerados](img/manual/09-crear-proyecto.png)
 
 | # | Campo | Qué escribir |
 |:-:|---|---|
-| 1 | Resultado | **Passed** (pasó), **Failed** (falló), **Blocked** (no se pudo ejecutar) o **Skipped** (se omitió) |
-| 2 | Comentario | Opcional: qué observaste |
-| 3 | Registrar | Guarda la ejecución en el **Historial** |
-| 4 | Reportar defecto | Aparece en las ejecuciones fallidas para registrar el defecto encontrado |
+| 1 | Nombre | El nombre del proyecto (obligatorio) |
+| 2 | Descripción | De qué trata el proyecto |
+| 3 | Guardar | Crea el proyecto |
 
-### 4.9 Reportar un defecto
+Dentro del proyecto, **+ Nueva suite** crea una suite (un grupo de casos relacionados) con nombre
+y descripción.
 
-![Formulario de defecto](img/manual/09-defecto-nuevo.png)
+**Caso de prueba.** Dentro de una suite pulsa **+ Nuevo caso**.
+
+![Formulario de caso de prueba con sus campos numerados](img/manual/10-crear-caso.png)
 
 | # | Campo | Qué escribir |
 |:-:|---|---|
-| 1 | Título | Resumen del problema |
-| 2 | Descripción | Qué se esperaba, qué pasó y cómo reproducirlo |
-| 3 | Severidad | Crítica, Alta, Media o Baja |
-| 4 | Registrar defecto | Botón |
+| 1 | Título | Qué se prueba (obligatorio) |
+| 2 | Pasos | Los pasos, uno por línea |
+| 3 | Resultado esperado | Lo que debe pasar si todo funciona |
+| 4 | Prioridad | Alta, Media o Baja |
+| 5 | Guardar | Crea el caso (los campos visibles en tu pantalla se numeran en orden) |
 
-### 4.10 Seguimiento de defectos
+**Ejecución.** En la lista de casos pulsa **Ejecutar**: se abre el caso con sus pasos y el
+formulario para registrar el resultado.
 
-![Lista de defectos del proyecto](img/manual/10-defectos.png)
+![Registro de una ejecución con sus campos numerados](img/manual/11-ejecutar.png)
 
-En **Defectos** cambias el estado de cada uno: **Abierto**, **En progreso** o **Cerrado**.
+| # | Campo | Qué hacer |
+|:-:|---|---|
+| 1 | Resultado | **Aprobado**, **Fallido**, **Bloqueado** u **Omitido** |
+| 2 | Comentario | Opcional: qué pasó, sobre todo si falló |
+| 3 | Registrar | Guarda la ejecución en el historial del caso |
 
-### 4.11 Dashboard de cobertura
+### 8.2 Consultar: suites y casos
 
-![Dashboard de cobertura y resultados](img/manual/11-dashboard.png)
+**Suites.** Al abrir un proyecto ves sus suites.
+
+![Suites de un proyecto con sus elementos numerados](img/manual/12-suites.png)
+
+| # | Elemento | Qué hace |
+|:-:|---|---|
+| 1 | Suites | La sección del proyecto en la que estás |
+| 2 | + Nueva suite | Crea una suite |
+| 3 | Nombre de la suite | Abre sus casos |
+
+**Casos.** Cada suite muestra sus casos con prioridad, estado y último resultado.
+
+![Casos de una suite con sus elementos numerados](img/manual/13-casos.png)
+
+| # | Elemento | Qué hace |
+|:-:|---|---|
+| 1 | + Nuevo caso | Crea un caso en la suite |
+| 2 | Título del caso | Abre su edición; **Ejecutar** registra un resultado y **Eliminar** lo borra |
+
+### 8.3 Modificar: editar un caso
+
+Pulsa el título del caso o **Editar**: se abre el formulario con los datos cargados.
+
+![Edición de un caso de prueba con sus elementos numerados](img/manual/14-modificar.png)
+
+| # | Elemento | Qué hace |
+|:-:|---|---|
+| 1 | Campos del caso | Cambia el título, los pasos, el resultado esperado, la prioridad o el estado |
+| 2 | Guardar | Guarda los cambios |
+
+Los proyectos y las suites se editan igual, con **Editar** en su lista.
+
+### 8.4 Reportar: dashboard y defectos
+
+**Dashboard.** En el menú del proyecto, **Dashboard** muestra la cobertura y los resultados.
+
+![Dashboard de cobertura y resultados del proyecto](img/manual/15-dashboard.png)
 
 | Bloque | Qué muestra |
 |---|---|
-| Franja superior | Anillo con el porcentaje de casos ejecutados al menos una vez, y las cifras de casos en Passed, casos en Failed o Blocked y defectos abiertos |
-| Resultados | Una barra con la proporción de cada resultado de la última ejecución (Passed, Failed, Blocked, Skipped y sin ejecutar) y la cifra de cada uno |
-| Defectos abiertos por severidad | Una barra por severidad, proporcional a la que tiene más defectos abiertos |
-| Cobertura por suite | El mismo detalle, suite por suite, con una minibarra de cobertura |
+| Cobertura de ejecución | Cuántos casos se han ejecutado al menos una vez |
+| Aprobados / Fallidos o bloqueados | Resultados de la última ejecución de cada caso |
+| Defectos abiertos | Los que todavía no están cerrados, por severidad (Crítica, Alta, Media, Baja) |
+| Cobertura por suite | Casos, ejecutados y resultados de cada suite |
 
-Las cifras cuentan desde cero al aparecer; las que valen cero se ven atenuadas.
+**Defectos.** Cuando una ejecución queda **Fallida** o **Bloqueada**, en su historial aparece
+**Reportar defecto**: el formulario pide título, descripción y severidad, y el defecto queda
+vinculado a esa ejecución. **Defectos**, en el menú del proyecto, los lista con su severidad y
+estado.
 
-### 4.12 Preguntas frecuentes
+![Lista de defectos del proyecto](img/manual/16-defectos.png)
 
-**¿De dónde salieron los proyectos que veo al entrar?** Son los proyectos de ejemplo que la
-plataforma crea al registrarte. Puedes editarlos o usarlos como plantilla.
+## 9. Gestión de perfil
 
-**¿Puedo borrar un proyecto?** Archivar y eliminar proyectos es una acción reservada al
-administrador, para no perder historial de pruebas por error.
+### 9.1 Cambiar contraseña
 
-**¿Qué diferencia hay entre Blocked y Skipped?** *Blocked*: el caso no se pudo ejecutar por un
-impedimento (ambiente caído, dato faltante). *Skipped*: se decidió no ejecutarlo en esa ronda.
+![Formulario de cambio de contraseña con sus campos numerados](img/manual/17-contrasena.png)
 
-**¿Puedo instalarlo como aplicación?** Sí. En Chrome o Edge usa **Instalar aplicación** (ícono
-en la barra de direcciones o menú ⋮); en el iPhone, en Safari, **Compartir → Agregar a inicio**. Se
-abre en su propia ventana y entra directo a tus proyectos.
+| # | Campo | Qué escribir |
+|:-:|---|---|
+| 1 | Contraseña actual | Tu contraseña de hoy |
+| 2 | Nueva contraseña | Mínimo 8 caracteres |
+| 3 | Confirma la nueva contraseña | La misma contraseña nueva |
+| 4 | Guardar contraseña | Guarda el cambio; se cierran tus otras sesiones |
 
-**¿Qué pasa si me quedo sin internet?** Aparece la pantalla **Sin conexión**, que reintenta sola
-cada pocos segundos (o con **Reintentar ahora**) y vuelve a la página cuando hay red. Lo que ya
-guardaste sigue en el servidor.
+### 9.2 Seguridad
 
-![Pantalla sin conexión con reintento automático](img/manual/14-sin-conexion.png)
+![Pantalla de seguridad con los métodos de verificación](img/manual/18-seguridad.png)
 
-**Abrí un enlace y dice "Este caso no está en ninguna suite".** La dirección no existe (un enlace
-viejo o mal copiado, o un proyecto archivado). Usa **Ver proyectos** o **Volver al inicio**; si
-tenías la sesión abierta, sigue abierta.
+| Método | Qué puedes hacer |
+|---|---|
+| App autenticadora | Ver si está activa y si es el método que se pide por defecto |
+| Código por correo | **Agregar** el método que te falta o **Pedir este por defecto** |
 
-![Página no encontrada](img/manual/13-no-encontrada.png)
+Tener los dos métodos activos te permite entrar aunque no tengas el celular a mano.
 
-**¿Qué significa la pantalla "Estamos en mantenimiento"?** El servicio o su base de datos no están respondiendo en ese momento. No se perdió nada: tus proyectos, suites, casos y defectos siguen guardados, y ninguna acción quedó a medias (si no viste la confirmación, no se guardó). La pantalla se actualiza sola (un anillo muestra los segundos que faltan para el siguiente intento) y vuelve a la normalidad apenas el servicio responda; también puedes reintentar más tarde.
+## 10. Mensajes frecuentes
 
-## 5. Seguridad: tu información protegida
+| Mensaje | Qué significa | Qué hacer |
+|---|---|---|
+| Correo o contraseña incorrectos. | Los datos no coinciden | Revísalos o usa **¿Olvidaste tu contraseña?** |
+| El código no es correcto o ya venció. | El código escrito no es el vigente | Escribe el código que muestra ahora la app |
+| Pediste varios códigos seguidos. Espera unos minutos. | Se pidieron muchos códigos en poco tiempo | Espera unos minutos y vuelve a pedirlo |
+| El nombre es obligatorio. / El título es obligatorio. | Falta el dato principal del formulario | Complétalo y guarda de nuevo |
+| Tu contraseña quedó actualizada. Se cerraron tus otras sesiones. | El cambio quedó guardado | Usa la contraseña nueva en tus otros equipos |
+| Esta cuenta está suspendida. | La cuenta no está habilitada | Escribe a soporte (ver 11) |
+| Página no encontrada | La dirección que abriste no existe | Vuelve con el menú |
+| Sin conexión | Tu equipo no tiene internet | La pantalla reintenta sola |
 
-Tu confianza es lo primero: la plataforma solo pide los datos necesarios para funcionar, los protege y no los comparte con terceros. Esto es lo que se guarda y cómo se protege.
+| Página no encontrada | Sin conexión |
+|:-:|:-:|
+| ![Página no encontrada](img/manual/19-no-encontrada.png) | ![Pantalla sin conexión](img/manual/20-sin-conexion.png) |
 
-### Qué datos se guardan y dónde
+## 11. Preguntas frecuentes
 
-| Dato | Para qué se usa | Dónde se guarda | Quién lo ve |
-|---|---|---|---|
-| Nombre y correo | Identificar tu cuenta | MongoDB Atlas | Tú y el administrador |
-| Contraseña | Iniciar sesión | MongoDB Atlas, **solo su huella** | Nadie: no se puede leer ni recuperar |
-| Proyectos, suites, casos, ejecuciones y defectos | Tu trabajo de QA | MongoDB Atlas, marcados con tu cuenta | Tú y el administrador |
-| Verificación en dos pasos | Confirmar que eres tú al ingresar | MongoDB Atlas: clave de la app **cifrada** y código del correo **solo como huella** | Nadie: no se puede leer desde la base |
-| Sesión | Mantenerte conectado | Cookie en tu navegador | Firmada, invisible para JavaScript; vence sola |
+**¿Por qué la primera carga tarda unos segundos?** El servicio se suspende cuando nadie lo usa; la
+primera acción lo reactiva.
 
-### Cómo se protege tu información
+**¿Otra persona puede ver mis proyectos?** No. Cada cuenta ve sus propios proyectos.
 
-Comprobado en el código del proyecto (`backend/app/seguridad.py`, `dependencias.py`,
-`routers/web_auth.py`):
+**¿Puedo reportar un defecto sin ejecutar el caso?** No: el defecto nace de una ejecución fallida o
+bloqueada, así queda claro dónde y cuándo apareció.
 
-- **Contraseñas protegidas con hash.** Solo se guarda la huella.
-- **Verificación en dos pasos obligatoria** con app autenticadora (TOTP) o código por correo:
-  la clave de la app se guarda cifrada, un código no se acepta dos veces, los intentos errados
-  bloquean temporalmente y el código del correo vence en pocos minutos.
-- **Sesión en una cookie segura** que vence sola. **Salir** la borra, y cambiar o restablecer la
-  contraseña cierra las sesiones abiertas con la anterior.
-- **Recuperación sin atajos:** el enlace de "Olvidé mi contraseña" sirve una sola vez y vence; la
-  respuesta no revela si un correo tiene cuenta. "Perdí mi autenticador" exige la contraseña y un
-  código enviado al correo de la cuenta, y solo reemplaza la app cuando la nueva queda confirmada.
-- **Control de acceso por dueño:** cada proyecto, con todo lo que contiene, solo lo puede ver o
-  editar quien lo creó o un administrador. Cambiar el identificador en la URL no da acceso a
-  proyectos ajenos.
-- **Roles separados:** el registro solo crea cuentas QA; el administrador se crea aparte, por
-  comando, nunca desde un formulario. Solo el administrador puede archivar o eliminar proyectos y
-  suspender cuentas.
-- **Suspensión inmediata:** en cada petición se revisa que la cuenta siga activa; una cuenta
-  suspendida queda fuera sin esperar a que venza su sesión.
-- **Mensaje de error genérico** al iniciar sesión, para no revelar qué correos existen.
-- **Plantillas con escape automático** (Jinja2): lo que escribes se muestra como texto, no como
-  código.
-- **Secretos fuera del repositorio:** la conexión a MongoDB y la clave JWT viven en variables de
-  entorno de AWS Lambda.
-- **Bloqueo temporal** ante intentos fallidos repetidos de contraseña o de código.
-- **Registro de eventos de seguridad:** ingresos, intentos fallidos, bloqueos y cambios de
-  contraseña quedan registrados (nunca contraseñas ni códigos) y se depuran solos.
-- **Al día en seguridad:** el runtime, el sistema y las dependencias se mantienen con los últimos
-  parches y se revisan periódicamente.
+**¿Se puede instalar como aplicación?** Sí: en Chrome o Edge, **Instalar aplicación**; en iPhone,
+Safari → **Compartir → Agregar a inicio**.
 
-## 6. Agradecimientos
+**¿Dónde pido ayuda o reporto un problema?** Telegram [@lfac6](https://t.me/lfac6), WhatsApp
+[@carraian160](https://wa.me/carraian160) o [ariascluisf@hotmail.com](mailto:ariascluisf@hotmail.com).
 
-A mi familia, por su apoyo incondicional, su paciencia y por creer en cada proyecto incluso cuando apenas era una idea. Este trabajo también es de ustedes.
+## 12. Glosario
 
-Y a ti, que usas esta plataforma: cada prueba, comentario y sugerencia ayuda a que siga mejorando.
+| Término | Qué significa |
+|---|---|
+| **App autenticadora** | Aplicación del celular que muestra un código nuevo cada 30 segundos para confirmar que eres tú |
+| **Caso de prueba** | Una verificación concreta: pasos a seguir y resultado esperado |
+| **Cobertura** | Porcentaje de casos que se han ejecutado al menos una vez |
+| **Defecto** | Un problema encontrado al ejecutar un caso |
+| **Ejecución** | Cada vez que se corre un caso y se registra su resultado |
+| **Severidad** | Qué tan grave es un defecto: Crítica, Alta, Media o Baja |
+| **Suite** | Un grupo de casos de prueba relacionados |
+| **Verificación en dos pasos** | Además de la contraseña, se pide un código que solo tú puedes recibir |

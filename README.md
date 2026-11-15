@@ -1,4 +1,4 @@
-# Gestor de Casos de Prueba QA
+# Gestor de casos de prueba QA
 
 <p>
   <a href="https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/"><img src="docs/demo-badge.svg" alt="Abrir la demo en vivo" height="32"></a>
@@ -12,271 +12,100 @@
 ![HTMX](https://img.shields.io/badge/HTMX-3D72D7?style=for-the-badge&logo=htmx&logoColor=white)
 ![Jinja](https://img.shields.io/badge/Jinja2-B41717?style=for-the-badge&logo=jinja&logoColor=white)
 
+> 📘 **[Manual de usuario](docs/MANUAL.md)**: cómo usar cada pantalla, paso a paso y con imágenes.
+
 ## Contenido
 
 1. [Presentación](#1-presentación)
-2. [Estructura del proyecto](#2-estructura-del-proyecto)
+2. [Funcionalidades](#2-funcionalidades)
 3. [Arquitectura](#3-arquitectura)
-4. [Plataformas y su función](#4-plataformas-y-su-función)
-5. [Cómo usar la plataforma](#5-cómo-usar-la-plataforma)
-6. [Instalación para pruebas](#6-instalación-para-pruebas)
-7. [Autor y licencia](#7-autor-y-licencia)
+4. [Estructura del proyecto](#4-estructura-del-proyecto)
+5. [Instalación para pruebas](#5-instalación-para-pruebas)
+6. [Autor y licencia](#6-autor-y-licencia)
 
 ---
 
 ## 1. Presentación
 
-Aplicación web para equipos de QA: organiza proyectos, suites y casos de
-prueba, registra ejecuciones con su resultado, vincula defectos y mide
-cobertura. Construida en Python (FastAPI) con MongoDB como única base de
-datos.
+Aplicación web para equipos de QA: organiza proyectos, suites y casos de prueba, registra
+ejecuciones con su resultado, vincula defectos y mide la cobertura.
 
-### En pocas palabras
-
-- **Qué hace:** es el cuaderno de trabajo de un equipo de QA. Ahí se definen qué
-  se va a probar (casos de prueba agrupados en suites y proyectos), se anota el
-  resultado de cada ejecución y se reportan los defectos encontrados.
-- **Qué muestra:** cuánto está cubierto y cómo van los resultados, por proyecto
-  y por suite.
+- **Qué hace:** es el cuaderno de trabajo de un equipo de QA. Ahí se define qué se va a probar, se
+  anota el resultado de cada ejecución y se reportan los defectos encontrados.
+- **Qué muestra:** cuánto está cubierto y cómo van los resultados, por proyecto y por suite.
 - **Cómo probarlo:** entra a la [demo](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/),
-  crea una cuenta en *Registro* y arma tu primer proyecto. Para correrlo en tu
-  equipo, ve a [Instalación para pruebas](#6-instalación-para-pruebas).
+  crea una cuenta y arma tu primer proyecto.
 
-Es la capa visible del proyecto insignia de QA/automatización del
-portafolio. La suite de pruebas real vive en
-[`pruebas-coffeemaker/`](pruebas-coffeemaker/README.md), dentro de este
-mismo repositorio: JUnit, Mockito, JaCoCo, Cucumber y mutation testing
-(pitest) sobre el dominio CoffeeMaker de la especialización de Coursera
-"Introducción a las pruebas de software". Esas pruebas corren aparte (en
-Eclipse o VS Code, no contra esta app); sus resultados se registran aquí
-manualmente como Ejecuciones, con el reporte real (JaCoCo, surefire,
-Cucumber, pitest) como evidencia — ver el flujo completo en el README de
-esa carpeta.
+Es la capa visible del proyecto de QA y automatización del portafolio. La suite de pruebas real vive
+en [`pruebas-coffeemaker/`](pruebas-coffeemaker/README.md): JUnit, Mockito, JaCoCo, Cucumber y
+mutation testing (pitest) sobre el dominio CoffeeMaker. Esas pruebas corren aparte y sus resultados
+se registran aquí como ejecuciones, con sus reportes como evidencia.
 
-### Demo en vivo
+## 2. Funcionalidades
 
-**Aplicación:** [abrir la demo en vivo](https://immxew65sfxj7nubwzlszdimfi0qegzc.lambda-url.us-east-1.on.aws/)
-
-### Qué hace
-
-- Registro e inicio de sesión con contraseña cifrada y verificación en dos pasos obligatoria
-  (app autenticadora o código por correo, a elección; el otro se agrega desde **Seguridad**)
-- Recuperación de la cuenta por correo: **Olvidé mi contraseña** (enlace de un solo uso; al cambiarla
-  se cierran las sesiones abiertas y la verificación en dos pasos sigue activa) y **Perdí mi
-  autenticador** (código al correo de la cuenta y configuración obligatoria de una app nueva)
-- Bloqueo temporal ante intentos fallidos repetidos y registro de eventos de seguridad (ingresos,
-  intentos fallidos, bloqueos y cambios de contraseña)
-- Cualquier cuenta creada desde el registro crea y edita su propio trabajo
-- Proyectos, Suites de prueba y Casos de prueba, organizados jerárquicamente
-- Ejecuciones de un caso con resultado (Passed / Failed / Blocked / Skipped)
-- Defectos vinculados a una ejecución fallida, con severidad y estado
-- Panel de cobertura y resultados por proyecto y suite
-
-### Con qué está hecho
-
-| Capa | Tecnología |
-|---|---|
-| Servidor | FastAPI, Uvicorn |
-| Interfaz | Jinja2, HTMX |
-| Base de datos | MongoDB |
-| Sesiones | JWT en cookie httponly |
-| Contraseñas | Hash con sal |
-
----
-
-## 2. Estructura del proyecto
-
-```
-.
-├── backend/                  Aplicación web (FastAPI + MongoDB) — detalle abajo
-├── pruebas-coffeemaker/      Suite de automatización QA (JUnit, Mockito,
-│                             JaCoCo, Cucumber, pitest) — README propio
-├── .env.example
-└── README.md                 Este archivo
-```
-
-Detalle de `backend/`:
-
-```
-backend/
-├── requirements.txt
-├── tests/                   Pruebas de la recuperación de cuenta (pytest)
-└── app/
-    ├── main.py              Punto de entrada, monta rutas y estáticos
-    ├── config.py            Carga del .env
-    ├── database.py          Conexión a Mongo e índices
-    ├── seguridad.py         Hasheo de contraseñas y sesiones (JWT)
-    ├── mfa.py               Verificación en dos pasos y "Perdí mi autenticador"
-    ├── dependencias.py      Identificación del usuario y control de acceso
-    ├── repositorios/        Acceso a datos por colección
-    ├── routers/             Páginas web por sección
-    ├── comandos/            Scripts de un solo uso (datos de ejemplo)
-    ├── templates/           Plantillas Jinja2
-    └── static/               Hoja de estilos y tema claro/oscuro
-```
-
----
+- Registro e ingreso con verificación en dos pasos obligatoria (app autenticadora o código por correo).
+- Recuperación de la contraseña y del autenticador por correo.
+- Proyectos, suites y casos de prueba, organizados jerárquicamente.
+- Ejecuciones con resultado: aprobado, fallido, bloqueado u omitido.
+- Defectos vinculados a una ejecución fallida, con severidad y estado.
+- Dashboard de cobertura y resultados por proyecto y por suite.
+- Adaptable a celular, tablet y computador, tema claro y oscuro, e instalable como aplicación.
 
 ## 3. Arquitectura
 
 <p align="center">
-  <img src="docs/arquitectura.svg" alt="Diagrama de arquitectura: FastAPI con Mangum en AWS Lambda detrás de una Function URL, MongoDB Atlas, suite CoffeeMaker local y pruebas E2E de qa-evidencia" width="100%">
+  <img src="docs/arquitectura.svg" alt="Diagrama de arquitectura: aplicación FastAPI con páginas Jinja2 y HTMX, base MongoDB, suite CoffeeMaker local y pruebas E2E" width="100%">
 </p>
 
-- Las páginas se generan con **Jinja2 + HTMX**; la sesión viaja en un JWT dentro
-  de una cookie httponly y las contraseñas se guardan solo como huella. El ingreso exige
-un segundo paso (TOTP con la clave cifrada, o código por correo
-guardado solo como huella).
-- La **suite CoffeeMaker** corre en local y sus reportes se registran en la app
-  como ejecuciones.
-
----
-
-## 4. Plataformas y su función
-
-| Plataforma | Función en el proyecto |
+| Capa | Tecnología |
 |---|---|
-| ![AWS Lambda](https://img.shields.io/badge/AWS_Lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white) | Ejecuta la app FastAPI mediante el adaptador Mangum, expuesta con una Function URL (sin API Gateway). |
-| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) | MongoDB Atlas guarda las seis colecciones: `usuarios`, `proyectos`, `suites`, `casos_prueba`, `ejecuciones` y `defectos`. No requiere ningún otro servicio ni clave de API. |
-| ![qa-evidencia](https://img.shields.io/badge/qa--evidencia-2EAD33?style=for-the-badge&logo=playwright&logoColor=white) | Prueba la demo automáticamente dos veces al día y publica la evidencia. |
+| Servidor | FastAPI |
+| Interfaz | Jinja2 + HTMX |
+| Datos | MongoDB |
+| Pruebas | pytest en el despliegue; pruebas E2E diarias con Playwright |
+| Despliegue | Se publica solo desde GitHub en cada cambio a `main`, después de pasar las pruebas |
 
----
+## 4. Estructura del proyecto
 
-## 5. Cómo usar la plataforma
+```
+backend/
+├── app/
+│   ├── main.py           Punto de entrada
+│   ├── routers/          Páginas por sección
+│   ├── repositorios/     Acceso a datos
+│   ├── templates/        Plantillas Jinja2
+│   └── static/           Estilos, íconos y tema claro/oscuro
+├── tests/                Pruebas (pytest)
+└── requirements.txt
+pruebas-coffeemaker/      Suite de automatización QA (README propio)
+docs/                     Manual de usuario y diagramas
+```
 
-### 5.1 Crear una cuenta
+## 5. Instalación para pruebas
 
-1. En la página de inicio, pulsa **Crear cuenta**.
-2. Completa **Nombre**, **Correo**, **Contraseña** y **Confirmar contraseña**.
-3. Pulsa **Crear cuenta** y elige tu verificación en dos pasos: **App autenticadora** (escanea el
-   QR y escribe el primer código) o **Código por correo**.
-
-### 5.2 Iniciar sesión
-
-1. Pulsa **Ya tengo cuenta** (o **Ingresa** desde el registro).
-2. Escribe **Correo** y **Contraseña** y pulsa **Ingresar**.
-3. Escribe el código de 6 dígitos de tu app o de tu correo y pulsa **Verificar**. En **Seguridad**
-   puedes agregar el otro método y elegir cuál se pide por defecto. Si ya no tienes la app, pulsa
-   **Perdí mi autenticador**: llega un código al correo de la cuenta (vence en 15 minutos) y, al
-   escribirlo, configuras una app autenticadora nueva; la anterior deja de servir solo cuando
-   confirmas la nueva, y la sesión se abre recién en ese momento.
-4. Entras a **Proyectos**, donde solo ves tus propios proyectos.
-
-**Recuperar o cambiar la contraseña**
-
-1. En el inicio de sesión pulsa **¿Olvidaste tu contraseña?** y escribe tu correo. Si la cuenta
-   existe, llega un enlace (API de Brevo) que vence en 30 minutos y sirve una sola vez; la respuesta
-   es la misma exista o no la cuenta. El enlace solo pide la contraseña nueva y su confirmación. Al
-   guardarla se cierran todas las sesiones abiertas y la verificación en dos pasos sigue activa.
-2. Con la sesión iniciada, **Contraseña** (menú superior) cambia la contraseña: pide la actual y la nueva (mínimo
-   8 caracteres). Las demás sesiones abiertas se cierran; la actual continúa.
-
-### 5.3 Crear un proyecto
-
-1. En **Proyectos**, pulsa **+ Nuevo proyecto**.
-2. Completa **Nombre** y **Descripción** y pulsa **Guardar**.
-3. Desde la lista puedes **Editar** el proyecto o entrar con **Ver suites**.
-
-### 5.4 Crear suites de prueba
-
-1. Dentro del proyecto, pulsa **+ Nueva suite**.
-2. Completa **Nombre** y **Descripción** y pulsa **Guardar**.
-3. Cada suite ofrece **Editar**, **Ver casos** y **Eliminar**.
-
-### 5.5 Crear casos de prueba
-
-1. Dentro de la suite, pulsa **+ Nuevo caso**.
-2. Completa el formulario:
-
-   | Campo | Dato |
-   |---|---|
-   | Título | Nombre del caso |
-   | Pasos (uno por línea) | Pasos a seguir, uno en cada línea |
-   | Resultado esperado | Qué debe ocurrir si el sistema funciona bien |
-   | Prioridad | Alta, Media o Baja |
-   | Estado | Activo u Obsoleto |
-
-3. Pulsa **Guardar**.
-
-### 5.6 Ejecutar un caso
-
-1. En la lista de casos, pulsa **Ejecutar**.
-2. Elige el **Resultado** (Passed, Failed, Blocked o Skipped) y, si quieres,
-   escribe un **Comentario**.
-3. Pulsa **Registrar**. La ejecución queda en el **Historial** del caso.
-
-### 5.7 Reportar y seguir defectos
-
-1. Desde una ejecución, pulsa **Reportar defecto**.
-2. Completa **Título**, **Descripción** (qué se esperaba, qué pasó y cómo
-   reproducirlo) y **Severidad** (Crítica, Alta, Media o Baja).
-3. Pulsa **Registrar defecto**.
-4. En **Defectos** cambias el estado de cada uno: Abierto, En progreso o
-   Cerrado.
-
-### 5.8 Ver la cobertura
-
-Dentro de un proyecto, **Dashboard** muestra la cobertura y los resultados por
-proyecto y por suite, con acceso directo a **Ver defectos**.
-
-### Si el servicio no responde
-
-Si la API o la base de datos (MongoDB Atlas) no responden, la aplicación muestra una **pantalla de mantenimiento** con los colores del proyecto, en lugar de un error genérico o de una página que no carga.
-
-- **Servidor:** Si MongoDB no responde, cualquier página devuelve `app/templates/mantenimiento.html` con **503** y `Retry-After`. Si la base está caída al arrancar, la Lambda arranca igual (antes fallaba con un 502 de AWS).
-- **Pantalla:** Es una página independiente: no depende de la base ni de `base.html`, y respeta el tema claro/oscuro guardado.
-- **Recuperación:** Se recarga sola cada 30 s; cuando la base vuelve aparece la página normal. No reintenta acciones del usuario, para no duplicarlas.
-
----
-
-## 6. Instalación para pruebas
-
-Requisitos: Python 3.12.15+ y una base MongoDB accesible (por ejemplo, Atlas).
+Requisitos: Python 3.12 y una base MongoDB propia.
 
 ```bash
 cd backend
 python -m venv .venv
-.venv\Scripts\Activate.ps1        # Windows
-source .venv/bin/activate         # Linux o macOS
-
+.venv\Scripts\Activate.ps1        # Windows (en Linux o macOS: source .venv/bin/activate)
 pip install -r requirements.txt
 ```
 
-Copia `.env.example` como `.env` (en la raíz del proyecto) y completa
-`MONGO_URI` y `JWT_SECRET` (genera este último con
-`python -c "import secrets; print(secrets.token_urlsafe(48))"`).
+Copia `.env.example` como `.env` en la raíz y completa las variables que indica la plantilla. Nunca
+subas tu `.env` al repositorio.
 
 ```bash
 cd backend
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload      # http://127.0.0.1:8000
+python -m pytest tests             # pruebas (no necesitan la base)
 ```
 
-Queda en `http://127.0.0.1:8000`. Crea tu cuenta desde `/registro`.
+## 6. Autor y licencia
 
-Pruebas automáticas (no necesitan MongoDB: la colección de usuarios se simula en memoria):
+**Luis F. A.** · [GitHub](https://github.com/lariasca1994) · [LinkedIn](https://linkedin.com/in/lfac1)
 
-```bash
-cd backend
-pip install pytest httpx
-python -m pytest tests
-```
-
-### Despliegue
-
-Aplicación sin estado propio en disco (todo vive en MongoDB), así que corre
-igual en cualquier hospedaje con soporte para Python. La instancia pública
-corre en AWS Lambda (Function URL, sin API Gateway) mediante el adaptador
-`mangum`, con MongoDB Atlas como base de datos. Solo hay que definir
-`MONGO_URI` y `JWT_SECRET` como variables de entorno del servicio. Cada push a `main` corre
-primero las pruebas automáticas y, si pasan, actualiza la función.
-
----
-
-## 7. Autor y licencia
-
-> 📘 **[Manual de usuario](docs/MANUAL.md)**: cómo usar la plataforma campo por campo, qué datos se ingresan y qué garantiza en seguridad.
-
-**Luis F. A.**
-[GitHub](https://github.com/lariasca1994) · [LinkedIn](https://linkedin.com/in/lfac1)
+Contacto: Telegram [@lfac6](https://t.me/lfac6) · WhatsApp [@carraian160](https://wa.me/carraian160) ·
+[ariascluisf@hotmail.com](mailto:ariascluisf@hotmail.com)
 
 Licencia: MIT.
