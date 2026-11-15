@@ -13,7 +13,7 @@
         {% for defecto in defectos %}
         <tr>
             <td>{{ defecto.titulo }}</td>
-            <td><span class="severidad severidad-{{ defecto.severidad|lower }}">{{ defecto.severidad }}</span></td>
+            <td><span class="severidad severidad-{{ defecto.severidad|lower }}">{{ "Crítica" if defecto.severidad == "Critica" else defecto.severidad }}</span></td>
             <td>{{ defecto.estado }}</td>
             <td>{{ defecto.fecha_creacion.strftime("%Y-%m-%d") }}</td>
             <td class="acciones">

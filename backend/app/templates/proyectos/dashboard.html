@@ -64,7 +64,7 @@
         <ul class="barras-sev">
             {% for severidad, total in defectos_abiertos.items() %}
             <li class="t-{{ severidad|lower }}">
-                <span class="severidad severidad-{{ severidad|lower }}">{{ severidad }}</span>
+                <span class="severidad severidad-{{ severidad|lower }}">{{ "Crítica" if severidad == "Critica" else severidad }}</span>
                 <span class="pista"><i style="width: {{ (total / mayor * 100) if mayor else 0 }}%"></i></span>
                 <b data-contar{% if not total %} class="cifra-cero"{% endif %}>{{ total }}</b>
             </li>
